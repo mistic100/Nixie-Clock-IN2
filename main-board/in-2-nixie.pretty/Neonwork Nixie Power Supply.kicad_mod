@@ -1,0 +1,197 @@
+(footprint "Neonwork Nixie Power Supply"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "bda220c4-8c3b-4002-9381-41501a8d73df")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "HVPS"
+		(at 0 2.9 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "9e201e29-41f2-43b8-a564-254e348b2340")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "26142911-6747-488a-82fc-f2121d1e005c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9cf1f4ce-6691-4083-9d07-6a272ce3574c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -7.35 -7.9)
+		(end 7.35 7.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "d1e04e7a-15da-479e-a702-073ceb020192")
+	)
+	(fp_text user "GND"
+		(at -5 1.5 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "059a610a-c479-43a8-aa10-9d0662ab3c44")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "HV"
+		(at 5 -5.5 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "10d7e96d-eef0-4147-89b2-125724aad7a7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify right bottom)
+		)
+	)
+	(fp_text user "EN"
+		(at -5 -1 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "a33c98fe-575c-43ec-bb9c-ab59e6202858")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "VCC"
+		(at -5 -5.5 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "e8240ac8-ca1d-43c8-a94a-e9fa211ce587")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "GND"
+		(at 5 7 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "ea091df6-3643-4d4d-aeb6-a6f52ac10d6a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify right bottom)
+		)
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 4.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "86728ff1-67e4-446a-9f71-8abbf47942d0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at -6.25 -6.25)
+		(size 1.6 1.6)
+		(drill 0.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "88a2a819-54ba-4dc8-81bd-555c417ed2ee")
+	)
+	(pad "2" thru_hole circle
+		(at -6.25 -1.5)
+		(size 1.6 1.6)
+		(drill 0.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "2b5f0f0d-7e77-45cb-9112-f0f3b4c4f79f")
+	)
+	(pad "3" thru_hole circle
+		(at -6.25 1)
+		(size 1.6 1.6)
+		(drill 0.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "8a8518f3-0422-4e2a-9171-e72c4a0c5833")
+	)
+	(pad "4" thru_hole circle
+		(at 6.25 -6.25)
+		(size 1.6 1.6)
+		(drill 0.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "6ba2cae9-88fd-4e27-8a62-e50a29035ce9")
+	)
+	(pad "5" thru_hole circle
+		(at 6.25 6.25)
+		(size 1.6 1.6)
+		(drill 0.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "679be90d-8866-4a2a-a3e7-d5363e1cddef")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/in-2-nixie.3dshapes/Neonwork Nixie Power Supply.STEP"
+		(offset
+			(xyz 0 0 4.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -90)
+		)
+	)
+)

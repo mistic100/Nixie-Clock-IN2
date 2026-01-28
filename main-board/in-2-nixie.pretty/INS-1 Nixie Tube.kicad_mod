@@ -1,0 +1,141 @@
+(footprint "INS-1 Nixie Tube"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -4 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "f81ff37e-9748-4674-9f6d-b08701fbf57a")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "INS-1"
+		(at 0 4.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "029e2b49-8008-4379-88db-7bcc72094ae7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c65b6b4f-3cc1-4ddf-9861-99c125b92f7d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "88816181-c5e1-445f-b3b5-8a1ad79aed34")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_circle
+		(center 0 0)
+		(end 3.5 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "cf436078-cd1c-45b6-9bd0-8b9459b31021")
+	)
+	(fp_text user "K"
+		(at 1 -1.5 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "6dfcfece-1fa8-409b-86a1-e0f756079d19")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "A"
+		(at 1 2.5 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "745afa35-144e-4527-8865-f541a6ea57bc")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 6 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "43dc1eaf-61bf-4dc3-b312-72a2f379e979")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" np_thru_hole circle
+		(at 0 0)
+		(size 1 1)
+		(drill 3.2)
+		(layers "*.Cu" "*.Mask")
+		(uuid "54b34db6-2328-40b9-8b52-d07ff3b6048e")
+	)
+	(pad "1" thru_hole circle
+		(at 0 -2.75)
+		(size 1.2 1.2)
+		(drill 0.6)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "ae9faf5f-e12b-474b-ab95-6cfe97b8d69e")
+	)
+	(pad "2" thru_hole circle
+		(at 0 2.75)
+		(size 1.2 1.2)
+		(drill 0.6)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "c8c0c69e-c604-4910-8e52-43e1fc31be1a")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/in-2-nixie.3dshapes/INS-1 Nixie Tube.STEP"
+		(offset
+			(xyz 0 0 6)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -90)
+		)
+	)
+)
