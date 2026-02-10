@@ -1,0 +1,25 @@
+alias: Sync Time and weather to IN-2 Clock
+triggers:
+  - hours: /1
+    trigger: time_pattern
+actions:
+  - data:
+      topic: zigbee2mqtt/IN-2 Clock/set
+      payload: |
+        {
+          "write": {
+            "endpoint": 11,
+            "cluster": "genTime",
+            "payload": {
+              "time": {{ (as_timestamp(now())) | int }},
+              "timeZone": {{ now().utcoffset().total_seconds() | int }}
+            }
+          }
+        }
+    action: mqtt.publish
+  - action: text.set_value
+    metadata: {}
+    target:
+      entity_id: text.in_2_clock_weather
+    data:
+      value: "{{ states('weather.maison') }}"
