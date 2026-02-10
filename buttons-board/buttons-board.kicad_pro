@@ -504,7 +504,7 @@
       "plot": "out",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "buttons-board.step",
       "svg": "",
       "vrml": ""
     },

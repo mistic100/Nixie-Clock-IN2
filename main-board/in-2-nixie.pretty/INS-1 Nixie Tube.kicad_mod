@@ -4,7 +4,7 @@
 	(generator_version "9.0")
 	(layer "F.Cu")
 	(property "Reference" "REF**"
-		(at 0 -4 0)
+		(at 0 0 0)
 		(unlocked yes)
 		(layer "F.SilkS")
 		(uuid "f81ff37e-9748-4674-9f6d-b08701fbf57a")
@@ -103,15 +103,8 @@
 			)
 		)
 	)
-	(pad "" np_thru_hole circle
-		(at 0 0)
-		(size 1 1)
-		(drill 3.2)
-		(layers "*.Cu" "*.Mask")
-		(uuid "54b34db6-2328-40b9-8b52-d07ff3b6048e")
-	)
 	(pad "1" thru_hole circle
-		(at 0 -2.75)
+		(at 0 -2.5)
 		(size 1.2 1.2)
 		(drill 0.6)
 		(layers "*.Cu" "*.Mask")
@@ -119,7 +112,7 @@
 		(uuid "ae9faf5f-e12b-474b-ab95-6cfe97b8d69e")
 	)
 	(pad "2" thru_hole circle
-		(at 0 2.75)
+		(at 0 2.5)
 		(size 1.2 1.2)
 		(drill 0.6)
 		(layers "*.Cu" "*.Mask")
@@ -129,7 +122,7 @@
 	(embedded_fonts no)
 	(model "${KIPRJMOD}/in-2-nixie.3dshapes/INS-1 Nixie Tube.STEP"
 		(offset
-			(xyz 0 0 6)
+			(xyz 0 0 10.5)
 		)
 		(scale
 			(xyz 1 1 1)

@@ -1,3 +1,4 @@
 *-backups
 *.bak
+*.err
 fp-info-cache
