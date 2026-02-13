@@ -7,6 +7,8 @@
 
 #define TAG_ZB "ZB"
 
+#define ZIGBEE_BTN_READY 66
+
 typedef enum
 {
     CLICK = 0x0,

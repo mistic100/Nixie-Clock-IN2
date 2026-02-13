@@ -20,10 +20,11 @@
 
 #define TEMP_UPDATE_INTERVAL_S 60
 
-#define NUM_LEDS 5
+#define ANTI_POISONING_INTERVAL_S 20 * 60
 
-const char* ZIGBEE_MANUFACTURER = "StrangePlanet";
-const char* ZIGBEE_MODEL = "IN-2-Clock";
+#define LEDS_PIN RGB_BUILTIN
+#define NUM_LEDS 5
+#define LEDS_ORDER LED_COLOR_ORDER_RGB
 
 #define LOCALIZED_DATE
 
@@ -53,3 +54,46 @@ const char* MONTH_NAMES[12] = {
     "DEC"
 };
 #endif
+
+const uint8_t PIN_H10[6] = {
+    1,
+    2,
+    3,
+    4,
+    5,
+    6};
+
+const uint8_t PIN_H[10] = {
+    7,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    10,
+    9,
+    8};
+
+const uint8_t PIN_M10[6] = {
+    17,
+    19,
+    21,
+    21,
+    28,
+    18};
+
+const uint8_t PIN_M[10] = {
+    23,
+    29,
+    30,
+    31,
+    32,
+    28,
+    27,
+    26,
+    25,
+    24};
+
+const char* ZIGBEE_MANUFACTURER = "StrangePlanet";
+const char* ZIGBEE_MODEL = "IN-2-Clock";

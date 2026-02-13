@@ -9,6 +9,7 @@
 #include "Settings.hpp"
 #include "Manager.hpp"
 #include "MatrixDriver.hpp"
+#include "NixieDriver.hpp"
 #include "LedDriver.hpp"
 
 RotaryHandler encoder(ENCODER_A, ENCODER_B);
@@ -68,8 +69,7 @@ void setup()
                                   {
                                       manager.setOn(state);
                                       matrix.setOn(state);
-                                      // nixieDriver.setOn(state);
-                                  });
+                                      nixieDriver.setOn(state); });
 
     zigbeeCtrl.onTime([](time_t now)
                       { timeKeeper.setSystemTime(now); });
@@ -80,8 +80,7 @@ void setup()
     timeKeeper.onMinute([](const tm &timeinfo)
                         {
                             matrix.updateTime(timeinfo);
-                            // nixieDriver.updateTime(timeinfo);
-                        });
+                            nixieDriver.updateTime(timeinfo); });
 
     bme.onData([](bme_data_t data)
                {
@@ -94,9 +93,11 @@ void setup()
     zigbeeCtrl.begin();
     manager.begin();
     leds.begin();
-    // nixieDriver.begin();
+    nixieDriver.begin();
 
     delay(2000);
+
+    zigbeeCtrl.sendBtnEvent(ZIGBEE_BTN_READY, CLICK);
 }
 
 void loop()
@@ -111,5 +112,5 @@ void loop()
     manager.loop();
     matrix.loop();
     leds.loop();
-    // nixieDriver.loop();
+    nixieDriver.loop();
 }

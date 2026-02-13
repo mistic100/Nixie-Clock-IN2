@@ -5,6 +5,7 @@ import { logger } from 'zigbee-herdsman-converters/lib/logger';
 const CUSTOM_CLUSTER_ID = 0xFF01; // manuSpecificSinope
 const ATTR_ACTION_ID = 0x0000;
 const ATTR_WEATHER_ID = 0x0001;
+const ZIGBEE_BTN_READY = 66;
 
 export default {
     zigbeeModel: ['IN-2-Clock'],
@@ -32,6 +33,9 @@ export default {
                 logger.debug(`[IN-2-Clock] Raw data: ${JSON.stringify(msg.data)}`);
                 if (msg.endpoint.ID === 11) {
                     const buttonId = msg.data[3];
+                    if (buttonId === ZIGBEE_BTN_READY) {
+                        return { action: 'ready' };
+                    }
                     const action = msg.data[4] ?? -1;
                     const actionStr = ['click', 'double_click', 'long_click'][action] ?? 'unknown';
                     return { action: `${actionStr}_${buttonId}` };
@@ -69,6 +73,7 @@ export default {
     ],
     exposes: [
         e.action([
+          "ready",
           "click_1", "click_2",
           "double_click_1", "double_click_2",
           "long_click_1", "long_click_2",

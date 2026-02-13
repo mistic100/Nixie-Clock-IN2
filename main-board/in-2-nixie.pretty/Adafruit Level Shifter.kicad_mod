@@ -54,16 +54,89 @@
 		)
 	)
 	(attr through_hole)
-	(fp_rect
-		(start -7.62 -8.89)
-		(end 7.62 8.89)
+	(fp_line
+		(start -7.62 8.26)
+		(end -7.62 -8.26)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
-		(fill no)
 		(layer "F.SilkS")
-		(uuid "e43050ca-403f-4cf3-b817-1a6aaba25298")
+		(uuid "2d116f43-0301-4cf8-aa7f-8ea47e97b8a4")
+	)
+	(fp_line
+		(start -5.62 -10.26)
+		(end 5.62 -10.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "69567091-fbd3-40c5-8b5a-c398bdf3f1d0")
+	)
+	(fp_line
+		(start 5.62 10.26)
+		(end -5.62 10.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "1b95bb37-4875-4507-b614-5b3c2f50a304")
+	)
+	(fp_line
+		(start 7.62 -8.26)
+		(end 7.62 8.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "69d98393-abbf-4c3a-b543-179d6e9fe3bd")
+	)
+	(fp_arc
+		(start -7.62 -8.26)
+		(mid -7.034214 -9.674214)
+		(end -5.62 -10.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "6b91af33-335d-44c1-a83e-509f0aa8a9cf")
+	)
+	(fp_arc
+		(start -5.62 10.26)
+		(mid -7.034214 9.674214)
+		(end -7.62 8.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "c9d33b3a-ad42-407d-9d1a-ffae5ce4ca2a")
+	)
+	(fp_arc
+		(start 5.62 -10.26)
+		(mid 7.034214 -9.674214)
+		(end 7.62 -8.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "24ead6f3-f453-428d-99dd-35ee7a05f01b")
+	)
+	(fp_arc
+		(start 7.62 8.26)
+		(mid 7.034214 9.674214)
+		(end 5.62 10.26)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "53954e90-b5b3-4426-a29c-312d2b1744db")
 	)
 	(fp_text user "GND"
 		(at -3.81 6.985 0)
@@ -226,4 +299,15 @@
 		(uuid "cd43d511-5919-4df8-a1cc-25e707696cbc")
 	)
 	(embedded_fonts no)
+	(model "${KIPRJMOD}/in-2-nixie.3dshapes/Adafruit BSS138 Level Shifters.STEP"
+		(offset
+			(xyz 0 0 2.14)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -0)
+		)
+	)
 )

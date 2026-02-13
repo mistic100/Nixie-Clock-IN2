@@ -185,7 +185,7 @@
 	(embedded_fonts no)
 	(model "${KIPRJMOD}/in-2-nixie.3dshapes/Neonwork Nixie Power Supply.STEP"
 		(offset
-			(xyz 0 0 4.5)
+			(xyz 0 0 3.2)
 		)
 		(scale
 			(xyz 1 1 1)

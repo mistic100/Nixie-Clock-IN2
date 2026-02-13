@@ -40,7 +40,7 @@ public:
 
             for (u8_t i = 0; i < NUM_LEDS; i++)
             {
-                rgbLedWriteOrdered(RGB_BUILTIN, LED_COLOR_ORDER_RGB, color.r, color.g, color.b);
+                rgbLedWriteOrdered(LEDS_PIN, LEDS_ORDER, color.r, color.g, color.b);
             }
         }
     }
