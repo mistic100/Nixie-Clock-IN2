@@ -17,6 +17,7 @@ class BmeDriver
 private:
     Adafruit_BME280 _bme280;
     float _offset;
+    bool _offset_changed = false;
 
     void (*_on_data)(bme_data_t);
 
@@ -46,6 +47,12 @@ public:
 
             _on_data(data);
         }
+
+        if (_offset_changed)
+        {
+            ESP_LOGI(TAG_BME280, "Offset: %d", _offset);
+            _offset_changed = false;
+        }
     }
 
     void onData(void (*callback)(bme_data_t))
@@ -67,11 +74,13 @@ public:
     void incOffset()
     {
         _offset += 0.1;
+        _offset_changed = true;
     }
 
     void decOffset()
     {
         _offset -= 0.1;
+        _offset_changed = true;
     }
 };
 

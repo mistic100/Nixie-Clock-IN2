@@ -32,6 +32,7 @@ public:
             if (_on)
             {
                 color.setHSV(_color, 255, _brightness * 25.5);
+                ESP_LOGI(TAG_LED, "Color: %d %d %d");
             }
             else
             {

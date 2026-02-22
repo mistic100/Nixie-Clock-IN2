@@ -9,7 +9,7 @@
 #define RAIN_DROP_SPEED 1
 #define RAIN_REMAINING_TICKS 2
 
-struct Rain
+struct RainImpl
 {
     void init(Adafruit_IS31FL3731_With_Brightness *matrix)
     {

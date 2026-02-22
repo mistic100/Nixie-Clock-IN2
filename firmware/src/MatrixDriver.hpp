@@ -2,13 +2,14 @@
 
 #include <Adafruit_IS31FL3731.h>
 #include "constants.hpp"
-#include "data/weather_icons.h"
 #include "matrix/Adafruit_IS31FL3731_With_Brightness.hpp"
 #include "matrix/GameOfLife.hpp"
 #include "matrix/Fire.hpp"
 #include "matrix/Date.hpp"
 #include "matrix/Rain.hpp"
 #include "matrix/Sandfall.hpp"
+#include "matrix/Temp.hpp"
+#include "matrix/Weather.hpp"
 
 typedef enum
 {
@@ -31,17 +32,17 @@ private:
     Adafruit_IS31FL3731_With_Brightness _matrix;
 
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
-    volatile bool _modeChanged = false;
+    volatile bool _mode_changed = false;
 
     bool _on = true;
-    float _temperature = 0;
-    u8_t _weatherCode = 0;
 
-    GameOfLife _gameOfLife;
-    Fire _fire;
-    Date _date;
-    Rain _rain;
-    Sandfall _sandfall;
+    DateImpl _date;
+    FireImpl _fire;
+    GameOfLifeImpl _gameoflife;
+    RainImpl _rain;
+    SandfallImpl _sandfall;
+    TempImpl _temp;
+    WeatherImpl _weather;
 
 public:
     void begin()
@@ -58,10 +59,10 @@ public:
             return;
         }
 
-        if (_modeChanged)
+        if (_mode_changed)
         {
-            _modeChanged = false;
-            ESP_LOGI(TAG_MATRIX, "New mode is %d", _mode);
+            ESP_LOGI(TAG_MATRIX, "Mode: %d", _mode);
+            _mode_changed = false;
             applyMode();
         }
 
@@ -72,7 +73,7 @@ public:
             break;
 
         case GAME_OF_LIFE:
-            _gameOfLife.loop(&_matrix);
+            _gameoflife.loop(&_matrix);
             break;
 
         case FIRE:
@@ -134,10 +135,10 @@ public:
 
     void setTemp(float temp)
     {
-        _temperature = temp;
+        _temp.temperature = temp;
         if (_mode == TEMPERATURE)
         {
-            showTemp();
+            _temp.init(&_matrix);
         }
     }
 
@@ -155,17 +156,17 @@ public:
 
     void setWeather(u8_t weatherCode)
     {
-        _weatherCode = weatherCode;
+        _weather.code = weatherCode;
         if (_mode == WEATHER)
         {
-            showWeather();
+            _weather.init(&_matrix);
         }
     }
 
     void setMode(matrix_mode_t mode)
     {
         _mode = mode;
-        _modeChanged = true;
+        _mode_changed = true;
     }
 
     void nextMode()
@@ -211,15 +212,15 @@ private:
             break;
 
         case TEMPERATURE:
-            showTemp();
+            _temp.init(&_matrix);
             break;
 
         case WEATHER:
-            showWeather();
+            _weather.init(&_matrix);
             break;
 
         case GAME_OF_LIFE:
-            _gameOfLife.init(&_matrix);
+            _gameoflife.init(&_matrix);
             break;
 
         case FIRE:
@@ -232,70 +233,6 @@ private:
 
         case SANDFALL:
             _sandfall.init(&_matrix);
-            break;
-        }
-    }
-
-    void showTemp()
-    {
-        _matrix.clear();
-
-        char tens = (int)(_temperature / 10) % 10 + '0';
-        _matrix.drawChar(tens, 0, 6);
-
-        char ones = (int)_temperature % 10 + '0';
-        _matrix.drawChar(ones, 5, 6);
-
-        _matrix.drawPixel(10, 6);
-
-        char decimal = (int)(_temperature * 10) % 10 + '0';
-        _matrix.drawChar(decimal, 12, 6);
-    }
-
-    void showWeather()
-    {
-        _matrix.clear();
-
-        switch (_weatherCode)
-        {
-        case 1:
-            _matrix.drawBitmap(weather_sun, 3, 0, 9, 9);
-            break;
-
-        case 2:
-            _matrix.drawBitmap(weather_moon, 3, 0, 9, 9);
-            break;
-
-        case 3:
-            _matrix.drawBitmap(weather_cloud, 3, 0, 9, 9);
-            break;
-
-        case 4:
-            _matrix.drawBitmap(weather_rain, 3, 0, 9, 9);
-            break;
-
-        case 5:
-            _matrix.drawBitmap(weather_lightning, 3, 0, 9, 9);
-            break;
-
-        case 6:
-            _matrix.drawBitmap(weather_snow, 3, 0, 9, 9);
-            break;
-
-        case 7:
-            _matrix.drawBitmap(weather_wind, 3, 0, 9, 9);
-            break;
-
-        case 8:
-            _matrix.drawBitmap(weather_fog, 3, 0, 9, 9);
-            break;
-
-        case 9:
-            _matrix.drawBitmap(weather_exceptional, 3, 0, 9, 9);
-            break;
-
-        default:
-            _matrix.drawChar('?', 6, 6);
             break;
         }
     }

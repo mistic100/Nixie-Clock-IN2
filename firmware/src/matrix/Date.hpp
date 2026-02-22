@@ -5,7 +5,7 @@
 #include "../TimeKeeper.hpp"
 #include "Adafruit_IS31FL3731_With_Brightness.hpp"
 
-struct Date
+struct DateImpl
 {
     char _buffer[16];
     u8_t _strWidth;

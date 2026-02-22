@@ -45,6 +45,7 @@ public:
         {
             if (_on)
             {
+                ESP_LOGI(TAG_NIXIE, "Start anti poisoning");
                 _antipoisoning_timer = 0;
             }
         }
@@ -85,6 +86,8 @@ public:
 
 private:
     void showDigits(u8_t h10, u8_t h, u8_t m10, u8_t m) {
+        ESP_LOGI(TAG_NIXIE, "Show: %d %d %d %d", h10, h, m10, m);
+
         std::fill(_data, _data + 32, 0);
 
         _data[PIN_H10[h10]] = 1;

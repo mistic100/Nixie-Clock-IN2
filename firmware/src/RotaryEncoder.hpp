@@ -36,6 +36,10 @@ public:
         attachInterrupt(digitalPinToInterrupt(_dt), ISR_callback, CHANGE);
     }
 
+    void onUp(void (*callback)(void)) { _on_up = callback; }
+
+    void onDown(void (*callback)(void)) { _on_down = callback; }
+
     void IRAM_ATTR tick()
     {
         _state = (_state << 2) | (digitalRead(_clk) << 1) | digitalRead(_dt);
@@ -66,10 +70,4 @@ public:
             }
         }
     }
-
-    void onUp(void (*callback)(void)) { _on_up = callback; }
-
-    void onDown(void (*callback)(void)) { _on_down = callback; }
-
-    int getCounter() { return _counter; }
 };

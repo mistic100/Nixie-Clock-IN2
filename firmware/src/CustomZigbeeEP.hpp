@@ -6,19 +6,18 @@
 #define ATTR_ACTION_ID 0x0000
 #define ATTR_WEATHER_ID 0x0001
 
-#define TAG_ZB_TBN "ZB_BTN"
+#define TAG_ZB_CUSTOM "ZB_CUSTOM"
 
 /**
  * @brief Custom endpoint
  * - weather code cluster
  * - time cluster
- * - button press command
+ * - send action command
  */
 class CustomZigbeeEP : public ZigbeeEP
 {
 private:
     time_t _read_time;
-    int32_t _read_offset;
 
     void (*_on_time)(time_t);
     void (*_on_weather)(u8_t);
@@ -58,16 +57,17 @@ public:
         {
             if (msg->attribute.id == ESP_ZB_ZCL_ATTR_TIME_TIME_ID)
             {
-                _read_time = *(uint32_t *)msg->attribute.data.value;
+                _read_time = *(u32_t *)msg->attribute.data.value;
             }
             else if (msg->attribute.id == ESP_ZB_ZCL_ATTR_TIME_TIME_ZONE_ID)
             {
-                _read_offset = *(uint32_t *)msg->attribute.data.value;
-                _on_time(_read_time + _read_offset);
+                u32_t offset = *(u32_t *)msg->attribute.data.value;
+                ESP_LOGI(TAG_ZB_CUSTOM, "Received time %d and offset %d", _read_time, offset);
+                _on_time(_read_time + offset);
             }
             else
             {
-                log_w("Received message ignored. Attribute ID: %d not supported for Time cluster", msg->attribute.id);
+                ESP_LOGW(TAG_ZB_CUSTOM, "Received message ignored. Attribute ID: %d not supported for Time cluster", msg->attribute.id);
             }
         }
         else if (msg->info.cluster == CUSTOM_CLUSTER_ID)
@@ -75,22 +75,23 @@ public:
             if (msg->attribute.id == ATTR_WEATHER_ID)
             {
                 u8_t weather = *(u8_t *)msg->attribute.data.value;
+                ESP_LOGI(TAG_ZB_CUSTOM, "Received weather code %d", weather);
                 _on_weather(weather);
             }
             else
             {
-                log_w("Received message ignored. Attribute ID: %d not supported for custom cluster", msg->attribute.id);
+                ESP_LOGW(TAG_ZB_CUSTOM, "Received message ignored. Attribute ID: %d not supported for Custom cluster", msg->attribute.id);
             }
         }
         else
         {
-            log_w("Received message ignored. Cluster ID: %d not supported", msg->info.cluster);
+            ESP_LOGW(TAG_ZB_CUSTOM, "Received message ignored. Cluster ID: %d not supported", msg->info.cluster);
         }
     }
 
     void sendEvent(u8_t button_id, u8_t action)
     {
-        ESP_LOGI(TAG_ZB_TBN, "Send event %d %d", button_id, action);
+        ESP_LOGI(TAG_ZB_CUSTOM, "Send event %d %d", button_id, action);
         u8_t payload[2] = {button_id, (u8_t)0};
 
         esp_zb_zcl_custom_cluster_cmd_req_t req = {0};

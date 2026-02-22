@@ -105,7 +105,7 @@ public:
     }
 
 private:
-    u8_t getColor(u8_t color)
+    inline u8_t getColor(u8_t color)
     {
         return scale8(color, _brightness * 25.5);
     }

@@ -12,6 +12,8 @@
 #include "NixieDriver.hpp"
 #include "LedDriver.hpp"
 
+#define TAG_MAIN "MAIN"
+
 RotaryHandler encoder(ENCODER_A, ENCODER_B);
 Button2 encoderButton;
 Button2 button1;
@@ -36,40 +38,61 @@ void setup()
     button3.begin(BTN_3);
 
     encoder.onUp([]()
-                 { manager.up(); });
+                 { 
+        ESP_LOGI(TAG_MAIN, "Encoder up");
+        manager.up(); });
 
     encoder.onDown([]()
-                   { manager.down(); });
+                   { 
+        ESP_LOGI(TAG_MAIN, "Encoder down");
+        manager.down(); });
 
     encoderButton.setClickHandler([](Button2 &btn)
-                                  { manager.ok(); });
+                                  { 
+        ESP_LOGI(TAG_MAIN, "Encoder click");
+        manager.ok(); });
 
     button1.setClickHandler([](Button2 &btn)
-                            { zigbeeCtrl.sendBtnEvent(1, CLICK); });
-
-    button2.setClickHandler([](Button2 &btn)
-                            { zigbeeCtrl.sendBtnEvent(2, CLICK); });
+                            { 
+        ESP_LOGI(TAG_MAIN, "Btn 1 click");
+        zigbeeCtrl.sendBtnEvent(1, CLICK); });
 
     button1.setDoubleClickHandler([](Button2 &btn)
-                                  { zigbeeCtrl.sendBtnEvent(1, DOUBLE_CLICK); });
-
-    button2.setDoubleClickHandler([](Button2 &btn)
-                                  { zigbeeCtrl.sendBtnEvent(2, DOUBLE_CLICK); });
+                                  { 
+        ESP_LOGI(TAG_MAIN, "Btn 1 double click");
+        zigbeeCtrl.sendBtnEvent(1, DOUBLE_CLICK); });
 
     button1.setLongClickDetectedHandler([](Button2 &btn)
-                                        { zigbeeCtrl.sendBtnEvent(1, LONG_CLICK); });
+                                        { 
+        ESP_LOGI(TAG_MAIN, "Btn 1 long click");
+        zigbeeCtrl.sendBtnEvent(1, LONG_CLICK); });
+
+    button2.setClickHandler([](Button2 &btn)
+                            { 
+        ESP_LOGI(TAG_MAIN, "Btn 2 click");
+        zigbeeCtrl.sendBtnEvent(2, CLICK); });
+
+    button2.setDoubleClickHandler([](Button2 &btn)
+                                  { 
+        ESP_LOGI(TAG_MAIN, "Btn 2 double click");
+        zigbeeCtrl.sendBtnEvent(2, DOUBLE_CLICK); });
 
     button2.setLongClickDetectedHandler([](Button2 &btn)
-                                        { zigbeeCtrl.sendBtnEvent(2, LONG_CLICK); });
+                                        { 
+        ESP_LOGI(TAG_MAIN, "Btn 2 long click");
+        zigbeeCtrl.sendBtnEvent(2, LONG_CLICK); });
 
     button3.setClickHandler([](Button2 &btn)
-                            { zigbeeCtrl.toggleMainSwitch(); });
+                            { 
+        ESP_LOGI(TAG_MAIN, "Btn 3 click");
+        zigbeeCtrl.toggleMainSwitch(); });
 
     zigbeeCtrl.onMainSwitchChange([](bool state)
                                   {
-                                      manager.setOn(state);
-                                      matrix.setOn(state);
-                                      nixieDriver.setOn(state); });
+        ESP_LOGI(TAG_MAIN, "Main state %d", state);
+        manager.setOn(state);
+        matrix.setOn(state);
+        nixieDriver.setOn(state); });
 
     zigbeeCtrl.onTime([](time_t now)
                       { timeKeeper.setSystemTime(now); });
@@ -79,13 +102,13 @@ void setup()
 
     timeKeeper.onMinute([](const tm &timeinfo)
                         {
-                            matrix.updateTime(timeinfo);
-                            nixieDriver.updateTime(timeinfo); });
+        matrix.updateTime(timeinfo);
+        nixieDriver.updateTime(timeinfo); });
 
     bme.onData([](bme_data_t data)
                {
-                    zigbeeCtrl.setTempAndHumidity(data.temp, data.humi);
-                    matrix.setTemp(data.temp); });
+        zigbeeCtrl.setTempAndHumidity(data.temp, data.humi);
+        matrix.setTemp(data.temp); });
 
     Wire.begin(SDA1, SCL1);
     matrix.begin();
@@ -97,6 +120,7 @@ void setup()
 
     delay(2000);
 
+    ESP_LOGI(TAG_MAIN, "Ready");
     zigbeeCtrl.sendBtnEvent(ZIGBEE_BTN_READY, CLICK);
 }
 

@@ -4,6 +4,8 @@
 #include "BmeDriver.hpp"
 #include "LedDriver.hpp"
 
+#define TAG_MANAGER "MANAGER"
+
 typedef enum
 {
     MATRIX_BRIGHTNESS,
@@ -21,13 +23,13 @@ private:
     bool _on = true;
 
     volatile menu_t _menu;
-    volatile bool _inSetting = false;
-    volatile bool _menuChanged = false;
+    volatile bool _in_setting = false;
+    volatile bool _menu_changed = false;
 
-    volatile bool _brightnessChanged = false;
-    volatile bool _tempOffsetChanged = false;
-    volatile bool _ledColorChanged = false;
-    volatile bool _ledBrightnessChanged = false;
+    volatile bool _matrix_brightness_changed = false;
+    volatile bool _temp_offset_changed = false;
+    volatile bool _led_color_changed = false;
+    volatile bool _led_brightness_changed = false;
 
     char _str_buffer[8];
 
@@ -43,32 +45,33 @@ public:
             return;
         }
 
-        if (_brightnessChanged)
+        if (_matrix_brightness_changed)
         {
             matrix.saveBrightness();
-            _brightnessChanged = false;
+            _matrix_brightness_changed = false;
         }
-        if (_tempOffsetChanged)
+        if (_temp_offset_changed)
         {
             bme.saveOffset();
-            _tempOffsetChanged = false;
+            _temp_offset_changed = false;
         }
-        if (_ledColorChanged)
+        if (_led_color_changed)
         {
             leds.saveColor();
-            _ledColorChanged = false;
+            _led_color_changed = false;
         }
-        if (_ledBrightnessChanged)
+        if (_led_brightness_changed)
         {
             leds.saveBrightness();
-            _ledBrightnessChanged = false;
+            _led_brightness_changed = false;
         }
 
-        if (_menuChanged && matrix.mode() == MENU)
+        if (_menu_changed && matrix.mode() == MENU)
         {
-            _menuChanged = false;
+            ESP_LOGI(TAG_MANAGER, "Menu: %d, In setting: %d", _menu, _in_setting);
+            _menu_changed = false;
 
-            if (!_inSetting)
+            if (!_in_setting)
             {
                 showMenu();
             }
@@ -95,7 +98,7 @@ public:
         {
             matrix.nextMode();
         }
-        else if (!_inSetting)
+        else if (!_in_setting)
         {
             nextMenu();
         }
@@ -120,7 +123,7 @@ public:
                 break;
             }
             
-            _menuChanged = true;
+            _menu_changed = true;
         }
     }
 
@@ -135,7 +138,7 @@ public:
         {
             matrix.prevMode();
         }
-        else if (!_inSetting)
+        else if (!_in_setting)
         {
             prevMenu();
         }
@@ -160,7 +163,7 @@ public:
                 break;
             }
 
-            _menuChanged = true;
+            _menu_changed = true;
         }
     }
 
@@ -173,11 +176,10 @@ public:
 
         if (matrix.mode() < MATRIX_MODE_COUNT)
         {
-            // enter menu
             matrix.setMode(MENU);
             setMenu(MATRIX_BRIGHTNESS);
         }
-        else if (!_inSetting)
+        else if (!_in_setting)
         {
             if (_menu == BACK)
             {
@@ -185,8 +187,8 @@ public:
             }
             else
             {
-                _inSetting = true;
-                _menuChanged = true;
+                _in_setting = true;
+                _menu_changed = true;
             }
         }
         else
@@ -194,24 +196,24 @@ public:
             switch (_menu)
             {
             case MATRIX_BRIGHTNESS:
-                _brightnessChanged = true;
+                _matrix_brightness_changed = true;
                 break;
 
             case TEMP_OFFSET:
-                _tempOffsetChanged = true;
+                _temp_offset_changed = true;
                 break;
 
             case LED_COLOR:
-                _ledColorChanged = true;
+                _led_color_changed = true;
                 break;
 
             case LED_BRIGHTNESS:
-                _ledBrightnessChanged = true;
+                _led_brightness_changed = true;
                 break;
             }
 
-            _inSetting = false;
-            _menuChanged = true;
+            _in_setting = false;
+            _menu_changed = true;
         }
     }
 
@@ -219,8 +221,8 @@ private:
     void setMenu(menu_t menu)
     {
         _menu = menu;
-        _inSetting = false;
-        _menuChanged = true;
+        _in_setting = false;
+        _menu_changed = true;
     }
 
     void nextMenu()

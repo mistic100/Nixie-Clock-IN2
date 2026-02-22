@@ -4,7 +4,7 @@
 #include "../constants.hpp"
 #include "Adafruit_IS31FL3731_With_Brightness.hpp"
 
-struct Sandfall
+struct SandfallImpl
 {
     void init(Adafruit_IS31FL3731_With_Brightness *matrix)
     {
