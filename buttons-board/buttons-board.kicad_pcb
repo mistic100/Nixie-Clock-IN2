@@ -9,6 +9,8 @@
 	(paper "A4")
 	(title_block
 		(title "Buttons board")
+		(date "2026-02-21")
+		(rev "1.0")
 		(company "StrangePlanet")
 	)
 	(layers
@@ -1847,16 +1849,17 @@
 			)
 		)
 	)
-	(gr_circle
-		(center 162.3 101.8)
-		(end 162.7 101.8)
+	(gr_poly
+		(pts
+			(xy 161.798 102.362) (xy 162.814 102.362) (xy 162.306 101.854)
+		)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
 		(fill yes)
 		(layer "B.SilkS")
-		(uuid "1b62260e-b7e8-48b9-8512-858dc28866da")
+		(uuid "3ec37d8b-671f-4cfa-86d7-0014d9ce66f8")
 	)
 	(gr_line
 		(start 223 104)
@@ -1985,18 +1988,6 @@
 		)
 		(layer "Edge.Cuts")
 		(uuid "fca96a3d-80e9-4095-bdef-68f5e0dadf9a")
-	)
-	(gr_text "${REFERENCE}"
-		(at 171.23 97.23 0)
-		(layer "B.Fab")
-		(uuid "cbdf7e15-86d6-44f2-baa7-0e39bfb89906")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify mirror)
-		)
 	)
 	(segment
 		(start 154.69 101.06)
