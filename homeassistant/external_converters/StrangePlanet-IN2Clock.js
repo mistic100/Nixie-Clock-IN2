@@ -5,7 +5,7 @@ import { logger } from 'zigbee-herdsman-converters/lib/logger';
 const CUSTOM_CLUSTER_ID = 0xFF01; // manuSpecificSinope
 const ATTR_ACTION_ID = 0x0000;
 const ATTR_WEATHER_ID = 0x0001;
-const ZIGBEE_BTN_READY = 66;
+const ZIGBEE_ENDPOINT_CUSTOM = 10;
 
 export default {
     zigbeeModel: ['IN-2-Clock'],
@@ -14,28 +14,25 @@ export default {
     description: 'IN-2 Clock',
     extend: [
         m.deviceEndpoints({ endpoints: {
-            "switch": 10,
-            "custom": 11,
-            "bme280": 12,
-            "default": 11, // for proper routing of getTime cluster
+            'switch': 1,
+            'bme280': 2,
+            'custom': ZIGBEE_ENDPOINT_CUSTOM,
+            'default': ZIGBEE_ENDPOINT_CUSTOM, // for proper routing of getTime cluster
         } }),
 
-        m.onOff({ endpointNames: ["switch"], powerOnBehavior: false }),
+        m.onOff({ endpointNames: ['switch'], powerOnBehavior: false }),
         
-        m.temperature({ endpointNames: ["bme280"] }),
-        m.humidity({ endpointNames: ["bme280"] }),
+        m.temperature({ endpointNames: ['bme280'] }),
+        m.humidity({ endpointNames: ['bme280'] }),
     ],
     fromZigbee: [
         {
-            cluster: "manuSpecificSinope",
+            cluster: 'manuSpecificSinope',
             type: ['raw'],
             convert: (model, msg, publish, options, meta) => {
                 logger.debug(`[IN-2-Clock] Raw data: ${JSON.stringify(msg.data)}`);
-                if (msg.endpoint.ID === 11) {
+                if (msg.endpoint.ID === ZIGBEE_ENDPOINT_CUSTOM) {
                     const buttonId = msg.data[3];
-                    if (buttonId === ZIGBEE_BTN_READY) {
-                        return { action: 'ready' };
-                    }
                     const action = msg.data[4] ?? -1;
                     const actionStr = ['click', 'double_click', 'long_click'][action] ?? 'unknown';
                     return { action: `${actionStr}_${buttonId}` };
@@ -60,7 +57,7 @@ export default {
                   'exceptional': 9,
                 }[value] ?? 0;
 
-                const endpoint = meta.device.getEndpoint(11);
+                const endpoint = meta.device.getEndpoint(ZIGBEE_ENDPOINT_CUSTOM);
                 await endpoint.write(
                     CUSTOM_CLUSTER_ID,
                     { [ATTR_WEATHER_ID]: { value: v, type: 0x20 } }, // 0x20 is uint8
@@ -73,12 +70,11 @@ export default {
     ],
     exposes: [
         e.action([
-          "ready",
-          "click_1", "click_2",
-          "double_click_1", "double_click_2",
-          "long_click_1", "long_click_2",
+          'click_1', 'click_2',
+          'long_click_1', 'long_click_2',
+          'double_click_1', 'double_click_2',
         ]),
       
-        e.text("weather", ea.SET).withCategory("config"),
+        e.text('weather', ea.SET).withCategory('config'),
     ],
 };

@@ -2,6 +2,7 @@
 
 #include <Adafruit_IS31FL3731.h>
 #include "constants.hpp"
+#include "Settings.hpp"
 #include "matrix/Adafruit_IS31FL3731_With_Brightness.hpp"
 #include "matrix/GameOfLife.hpp"
 #include "matrix/Fire.hpp"
@@ -30,6 +31,7 @@ class MatrixDriver
 {
 private:
     Adafruit_IS31FL3731_With_Brightness _matrix;
+    u8_t _brightness;
 
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
     volatile bool _mode_changed = false;
@@ -47,7 +49,10 @@ private:
 public:
     void begin()
     {
+        _brightness = settings.screenBrightess();
+
         _matrix.begin();
+        _matrix.setBrightness(_brightness);
 
         applyMode();
     }
@@ -97,22 +102,30 @@ public:
 
     const u8_t brightness() const
     {
-        return _matrix.brightness();
+        return _brightness;
     }
 
     void incBrightness()
     {
-        _matrix.incBrightness();
+        if (_brightness < 10)
+        {
+            _brightness++;
+            _matrix.setBrightness(_brightness);
+        }
     }
 
     void decBrightness()
     {
-        _matrix.decBrightness();
+        if (_brightness > 1)
+        {
+            _brightness--;
+            _matrix.setBrightness(_brightness);
+        }
     }
 
     void saveBrightness()
     {
-        _matrix.saveBrightness();
+        settings.saveScreenBrightness(_brightness);
     }
 
     void setOn(bool on)

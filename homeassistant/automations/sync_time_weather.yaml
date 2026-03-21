@@ -8,7 +8,7 @@ actions:
       payload: |
         {
           "write": {
-            "endpoint": 11,
+            "endpoint": 10,
             "cluster": "genTime",
             "payload": {
               "time": {{ (as_timestamp(now())) | int }},

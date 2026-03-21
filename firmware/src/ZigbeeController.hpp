@@ -7,21 +7,19 @@
 
 #define TAG_ZB "ZB"
 
-#define ZIGBEE_BTN_READY 66
-
 typedef enum
 {
-    CLICK = 0x0,
-    DOUBLE_CLICK = 0x1,
-    LONG_CLICK = 0x2,
+    CLICK = 0,
+    DOUBLE_CLICK = 1,
+    LONG_CLICK = 2,
 } btn_action_t;
 
 class ZigbeeController
 {
 private:
-    ZigbeeLight _mainSwitch = ZigbeeLight(10);
-    CustomZigbeeEP _customEp = CustomZigbeeEP(11);
-    ZigbeeTempSensor _tempSensor = ZigbeeTempSensor(12);
+    ZigbeeLight _mainSwitch = ZigbeeLight(1);
+    ZigbeeTempSensor _tempSensor = ZigbeeTempSensor(2);
+    CustomZigbeeEP _customEp = CustomZigbeeEP(10);
 
 public:
     void begin()
@@ -29,8 +27,8 @@ public:
         _mainSwitch.setManufacturerAndModel(ZIGBEE_MANUFACTURER, ZIGBEE_MODEL);
 
         _tempSensor.setMinMaxValue(-40, 85);
-        _tempSensor.setTolerance(1);
-        _tempSensor.addHumiditySensor(0, 100, 1);
+        _tempSensor.setTolerance(0.1);
+        _tempSensor.addHumiditySensor(0, 100, 0.1);
 
         Zigbee.addEndpoint(&_mainSwitch);
         Zigbee.addEndpoint(&_customEp);
@@ -56,6 +54,8 @@ public:
         Serial.println();
 
         ESP_LOGI(TAG_ZB, "Ready");
+
+        _mainSwitch.setLight(true);
 
         _tempSensor.setReporting(1, 0, 0.1);
         _tempSensor.setHumidityReporting(1, 0, 0.1);

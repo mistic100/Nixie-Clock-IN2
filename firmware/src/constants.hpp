@@ -10,13 +10,16 @@
 
 #define DOTS 3
 
-#define ENCODER_A 20
+#define ENCODER_A 9
 #define ENCODER_B 14
-#define ENCODER_SW 9
+#define ENCODER_SW 20
 
 #define BTN_1 4
 #define BTN_2 22
 #define BTN_3 5
+
+#define DOUBLE_CLICK_MS 300
+#define LONG_CLICK_MS 500
 
 #define TEMP_UPDATE_INTERVAL_S 60
 
@@ -78,9 +81,9 @@ const uint8_t PIN_H[10] = {
 const uint8_t PIN_M10[6] = {
     17,
     19,
+    20,
     21,
-    21,
-    28,
+    22,
     18};
 
 const uint8_t PIN_M[10] = {

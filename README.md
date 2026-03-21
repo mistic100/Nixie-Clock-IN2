@@ -22,7 +22,8 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
   - Game of Life animation
   - fire animation
   - Matrix animation
-- possibility to use a DS3231 RTC module
+  - rain animation
+- possibility to use a DS3231 RTC module (routed on the PCB but not available in current firmware)
   
 
 ### BOM

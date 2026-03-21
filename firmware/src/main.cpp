@@ -31,6 +31,16 @@ void setup()
 
     settings.begin();
 
+    encoderButton.setLongClickTime(LONG_CLICK_MS);
+    button1.setLongClickTime(LONG_CLICK_MS);
+    button2.setLongClickTime(LONG_CLICK_MS);
+    button3.setLongClickTime(10000); // Zigbee reset
+
+    encoderButton.setDoubleClickTime(DOUBLE_CLICK_MS);
+    button1.setDoubleClickTime(DOUBLE_CLICK_MS);
+    button2.setDoubleClickTime(DOUBLE_CLICK_MS);
+    button3.setDoubleClickTime(DOUBLE_CLICK_MS);
+
     encoder.begin(encoderISR);
     encoderButton.begin(ENCODER_SW);
     button1.begin(BTN_1);
@@ -87,6 +97,11 @@ void setup()
         ESP_LOGI(TAG_MAIN, "Btn 3 click");
         zigbeeCtrl.toggleMainSwitch(); });
 
+    button3.setLongClickDetectedHandler([](Button2 &btn)
+                                        {
+        ESP_LOGI(TAG_MAIN, "Zigbee reset");
+        esp_zb_factory_reset(); });
+
     zigbeeCtrl.onMainSwitchChange([](bool state)
                                   {
         ESP_LOGI(TAG_MAIN, "Main state %d", state);
@@ -121,7 +136,6 @@ void setup()
     delay(2000);
 
     ESP_LOGI(TAG_MAIN, "Ready");
-    zigbeeCtrl.sendBtnEvent(ZIGBEE_BTN_READY, CLICK);
 }
 
 void loop()

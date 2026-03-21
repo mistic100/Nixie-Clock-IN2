@@ -76,10 +76,10 @@ public:
 
     void updateTime(const tm &timeinfo)
     {
-        u8_t h10 = timeinfo.tm_hour % 10;
-        u8_t h = timeinfo.tm_hour - h10 * 10;
-        u8_t m10 = timeinfo.tm_min % 10;
-        u8_t m = timeinfo.tm_min - m10 * 10;
+        u8_t h10 = timeinfo.tm_hour / 10;
+        u8_t h = timeinfo.tm_hour % 10;
+        u8_t m10 = timeinfo.tm_min / 10;
+        u8_t m = timeinfo.tm_min % 10;
 
         showDigits(h10, h, m10, m);
     }

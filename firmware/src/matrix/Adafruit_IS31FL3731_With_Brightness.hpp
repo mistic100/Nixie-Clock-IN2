@@ -3,7 +3,6 @@
 #include <Adafruit_IS31FL3731.h>
 #include <FastLED.h>
 #include "../constants.hpp"
-#include "../Settings.hpp"
 #include "../data/smallest_pixel_75pt7b.h"
 
 #define TAG_MATRIX "MATRIX"
@@ -12,7 +11,7 @@ class Adafruit_IS31FL3731_With_Brightness
 {
 private:
     Adafruit_IS31FL3731 _matrix;
-    u8_t _brightness;
+    u8_t _brightness = 10;
     u8_t _f = 0;
 
 public:
@@ -30,8 +29,11 @@ public:
         _matrix.setRotation(MATRIX_ROTATION);
         _matrix.setFont(&smallest_pixel_75pt7b);
         _matrix.setTextWrap(false);
+    }
 
-        _brightness = settings.screenBrightess();
+    const void setBrightness(const u8_t brightness)
+    {
+        _brightness = brightness;
     }
 
     void beginFrame()
@@ -44,32 +46,6 @@ public:
     { 
         _matrix.displayFrame(_f);
         _f = 1 - _f;
-    }
-
-    const u8_t brightness() const
-    {
-        return _brightness;
-    }
-
-    void incBrightness()
-    {
-        if (_brightness < 10)
-        {
-            _brightness++;
-        }
-    }
-
-    void decBrightness()
-    {
-        if (_brightness > 1)
-        {
-            _brightness--;
-        }
-    }
-
-    void saveBrightness()
-    {
-        settings.saveScreenBrightness(_brightness);
     }
 
     void clear()
