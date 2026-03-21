@@ -4512,6 +4512,16 @@
 	)
 	(wire
 		(pts
+			(xy 148.59 147.32) (xy 157.48 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01267261-67f4-4067-9728-bab4f768cd24")
+	)
+	(wire
+		(pts
 			(xy 33.02 66.04) (xy 33.02 67.31)
 		)
 		(stroke
@@ -4862,6 +4872,16 @@
 	)
 	(wire
 		(pts
+			(xy 116.84 162.56) (xy 125.73 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38964dbe-7449-43f0-ae5e-bad8c3ed05c2")
+	)
+	(wire
+		(pts
 			(xy 91.44 19.05) (xy 130.81 19.05)
 		)
 		(stroke
@@ -4879,6 +4899,16 @@
 			(type default)
 		)
 		(uuid "3bfc600f-27f3-4013-9e99-428d608b763c")
+	)
+	(wire
+		(pts
+			(xy 148.59 152.4) (xy 157.48 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d3a5d04-a80b-40bb-bf43-22f607737515")
 	)
 	(wire
 		(pts
@@ -5059,16 +5089,6 @@
 			(type default)
 		)
 		(uuid "52ab3f02-df8d-4453-b3a1-f4ec1059d7d7")
-	)
-	(wire
-		(pts
-			(xy 148.59 152.4) (xy 157.48 152.4)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "537c529f-c09f-496f-9125-c57bca41a16b")
 	)
 	(wire
 		(pts
@@ -5902,16 +5922,6 @@
 	)
 	(wire
 		(pts
-			(xy 116.84 143.51) (xy 125.73 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b9cedfe9-bc9c-4f79-ab9e-cf72ffd49267")
-	)
-	(wire
-		(pts
 			(xy 73.66 151.13) (xy 52.07 140.97)
 		)
 		(stroke
@@ -6292,16 +6302,6 @@
 	)
 	(wire
 		(pts
-			(xy 148.59 147.32) (xy 157.48 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ed1cb926-1615-477f-8a70-94d9d7efcecc")
-	)
-	(wire
-		(pts
 			(xy 140.97 52.07) (xy 142.24 52.07)
 		)
 		(stroke
@@ -6322,13 +6322,13 @@
 	)
 	(wire
 		(pts
-			(xy 116.84 162.56) (xy 125.73 162.56)
+			(xy 116.84 143.51) (xy 125.73 143.51)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "f009d1e1-569a-410b-8637-e1104d19b99a")
+		(uuid "f4cba8e3-d969-4d60-b691-3821efc1ce39")
 	)
 	(wire
 		(pts
@@ -6591,7 +6591,7 @@
 		(uuid "464fa3e3-d937-4ace-8afd-1567ae9a16b1")
 	)
 	(label "ROT_SW"
-		(at 148.59 152.4 0)
+		(at 148.59 147.32 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6661,7 +6661,7 @@
 		(uuid "6170ccfa-66af-4885-93b6-4e06cac32715")
 	)
 	(label "ROT_A"
-		(at 148.59 147.32 0)
+		(at 148.59 152.4 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6691,7 +6691,7 @@
 		(uuid "96fc57e6-dbe3-42cd-b64d-31e52c954e19")
 	)
 	(label "ROT_SW"
-		(at 125.73 162.56 180)
+		(at 125.73 143.51 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6741,7 +6741,7 @@
 		(uuid "c00b9979-3cc0-4c29-b212-7d5c3e3f06e6")
 	)
 	(label "ROT_A"
-		(at 125.73 143.51 180)
+		(at 125.73 162.56 180)
 		(effects
 			(font
 				(size 1.27 1.27)
