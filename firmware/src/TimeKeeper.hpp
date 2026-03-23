@@ -10,7 +10,7 @@ private:
     struct tm _timeinfo;
 
     time_t _next_minute = 60;
-    void (*_on_minute)(const tm &);
+    void (*_on_minute)(void);
 
 public:
     void setSystemTime(time_t now)
@@ -33,11 +33,11 @@ public:
 
         if (_timeinfo.tm_sec == 0)
         {
-            _on_minute(_timeinfo);
+            _on_minute();
         }
     }
 
-    void onMinute(void (*callback)(const tm &))
+    void onMinute(void (*callback)(void))
     {
         _on_minute = callback;
     }
@@ -51,8 +51,7 @@ public:
         {
             _next_minute = (now / 60 + 1) * 60;
 
-            localtime_r(&now, &_timeinfo);
-            _on_minute(_timeinfo);
+            _on_minute();
         }
     }
 

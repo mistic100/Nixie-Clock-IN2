@@ -11,8 +11,8 @@ class Adafruit_IS31FL3731_With_Brightness
 {
 private:
     Adafruit_IS31FL3731 _matrix;
-    u8_t _brightness = 10;
-    u8_t _f = 0;
+    volatile u8_t _brightness = 10;
+    u8_t _frame = 0;
 
 public:
     u8_t _buffer[MATRIX_WIDTH][MATRIX_HEIGHT];
@@ -38,14 +38,14 @@ public:
 
     void beginFrame()
     {
-        _matrix.setFrame(_f);
+        _matrix.setFrame(_frame);
         _matrix.clear();
     }
 
     void showFrame()
     { 
-        _matrix.displayFrame(_f);
-        _f = 1 - _f;
+        _matrix.displayFrame(_frame);
+        _frame = 1 - _frame;
     }
 
     void clear()

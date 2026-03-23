@@ -11,15 +11,16 @@ class LedDriver
 {
 private:
     bool _on = true;
-    u8_t _color;
-    u8_t _brightness;
-    bool _changed = true;
+    volatile u8_t _color;
+    volatile u8_t _brightness;
+    volatile bool _changed = false;
 
 public:
     void begin()
     {
         _color = settings.ledColor();
         _brightness = settings.ledBrightness();
+        _changed = true;
     }
 
     void loop()

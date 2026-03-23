@@ -16,8 +16,9 @@ class BmeDriver
 {
 private:
     Adafruit_BME280 _bme280;
-    float _offset;
-    bool _offset_changed = false;
+    
+    volatile float _offset;
+    volatile bool _offset_changed = false;
 
     void (*_on_data)(bme_data_t);
 

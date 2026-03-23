@@ -105,6 +105,7 @@ void setup()
     zigbeeCtrl.onMainSwitchChange([](bool state)
                                   {
         ESP_LOGI(TAG_MAIN, "Main state %d", state);
+        leds.setOn(state);
         manager.setOn(state);
         matrix.setOn(state);
         nixieDriver.setOn(state); });
@@ -115,10 +116,10 @@ void setup()
     zigbeeCtrl.onWeather([](u8_t weatherCode)
                          { matrix.setWeather(weatherCode); });
 
-    timeKeeper.onMinute([](const tm &timeinfo)
+    timeKeeper.onMinute([]()
                         {
-        matrix.updateTime(timeinfo);
-        nixieDriver.updateTime(timeinfo); });
+        matrix.updateTime();
+        nixieDriver.update(); });
 
     bme.onData([](bme_data_t data)
                {

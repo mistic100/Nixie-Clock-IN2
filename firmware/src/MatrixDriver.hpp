@@ -31,8 +31,8 @@ class MatrixDriver
 {
 private:
     Adafruit_IS31FL3731_With_Brightness _matrix;
-    u8_t _brightness;
 
+    volatile u8_t _brightness;
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
     volatile bool _mode_changed = false;
 
@@ -155,11 +155,11 @@ public:
         }
     }
 
-    void updateTime(const tm &timeinfo)
+    void updateTime()
     {
         if (_mode == DATE)
         {
-            _date.init(timeinfo);
+            _date.init(timeKeeper.getTime());
         }
         else if (_mode == SANDFALL)
         {

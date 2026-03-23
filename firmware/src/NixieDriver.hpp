@@ -13,7 +13,7 @@ private:
     byte _data[32];
     bool _on = true;
     bool _dots = false;
-
+    bool _changed = false;
     s8_t _antipoisoning_timer = -1;
 
 public:
@@ -57,54 +57,63 @@ public:
                 runAntipoisoning();
             }
         }
+
+        if (_changed && _antipoisoning_timer == -1)
+        {
+            _changed = false;
+            
+            if (_on)
+            {
+                auto timeinfo = timeKeeper.getTime();
+
+                u8_t h10 = timeinfo.tm_hour / 10;
+                u8_t h = timeinfo.tm_hour % 10;
+                u8_t m10 = timeinfo.tm_min / 10;
+                u8_t m = timeinfo.tm_min % 10;
+
+                showDigits(h10, h, m10, m);
+                digitalWrite(DRIVER_OE, HIGH);
+            }
+            else
+            {
+                digitalWrite(DRIVER_OE, LOW);
+                digitalWrite(DOTS, LOW);
+            }
+        }
     }
 
     void setOn(bool on)
     {
         _on = on;
-
-        if (on)
-        {
-            updateTime(timeKeeper.getTime());
-        }
-        else
-        {
-            digitalWrite(DRIVER_OE, LOW);
-            digitalWrite(DOTS, LOW);
-        }
+        _changed = true;
     }
 
-    void updateTime(const tm &timeinfo)
+    void update()
     {
-        u8_t h10 = timeinfo.tm_hour / 10;
-        u8_t h = timeinfo.tm_hour % 10;
-        u8_t m10 = timeinfo.tm_min / 10;
-        u8_t m = timeinfo.tm_min % 10;
-
-        showDigits(h10, h, m10, m);
+        if (_on)
+        {
+            _changed = true;
+        }
     }
 
 private:
-    void showDigits(u8_t h10, u8_t h, u8_t m10, u8_t m) {
-        ESP_LOGI(TAG_NIXIE, "Show: %d %d %d %d", h10, h, m10, m);
+    void showDigits(u8_t h10, u8_t h, u8_t m10, u8_t m)
+    {
+        ESP_LOGI(TAG_NIXIE, "Show: %d%d:%d%d", h10, h, m10, m);
 
         std::fill(_data, _data + 32, 0);
 
-        _data[PIN_H10[h10]] = 1;
-        _data[PIN_H[h]] = 1;
-        _data[PIN_M10[m10]] = 1;
-        _data[PIN_M[m]] = 1;
+        if (h10 < 6) _data[PIN_H10[h10] - 1] = 1;
+        if (h < 10) _data[PIN_H[h] - 1] = 1;
+        if (m10 < 6) _data[PIN_M10[m10] - 1] = 1;
+        if (m < 10) _data[PIN_M[m] - 1] = 1;
 
-        digitalWrite(DRIVER_OE, LOW);
-
-        for (s8_t i = 31; i >= 1; i--)
+        for (s8_t i = 31; i >= 0; i--)
         {
-            digitalWrite(DRIVER_CLK, HIGH);
             digitalWrite(DRIVER_DIN, _data[i]);
+            digitalWrite(DRIVER_CLK, HIGH);
             digitalWrite(DRIVER_CLK, LOW);
         }
-
-        digitalWrite(DRIVER_OE, HIGH);
     }
 
     void runAntipoisoning()
@@ -116,7 +125,7 @@ private:
         if (_antipoisoning_timer >= 100)
         {
             _antipoisoning_timer = -1;
-            updateTime(timeKeeper.getTime());
+            _changed = true;
         }
     }
 };
