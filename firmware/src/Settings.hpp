@@ -6,8 +6,9 @@
 
 static const char *KEY_SCREEN_BRIGHTNESS = "bri";
 static const char *KEY_TEMP_OFFSET = "tof";
-static const char *KEY_LED_COLOR = "lco";
-static const char *KEY_LED_BRIGHTNESS = "lri";
+static const char *KEY_LED_COLOR_H = "colh";
+static const char *KEY_LED_COLOR_S = "cols";
+static const char *KEY_LED_COLOR_V = "colv";
 
 class Settings
 {
@@ -27,14 +28,13 @@ public:
         return NVS.getFloat(KEY_TEMP_OFFSET, 0);
     }
 
-    const u8_t ledColor() const
+    const HsvColor_t ledColor() const
     {
-        return NVS.getInt(KEY_LED_COLOR, 0);
-    }
-
-    const u8_t ledBrightness() const
-    {
-        return NVS.getInt(KEY_LED_BRIGHTNESS, 10);
+        return HsvColor_t(
+            NVS.getInt(KEY_LED_COLOR_H, 0),
+            NVS.getInt(KEY_LED_COLOR_S, 0),
+            NVS.getInt(KEY_LED_COLOR_V, 255)
+        );
     }
 
     void saveScreenBrightness(const u8_t brightness)
@@ -49,16 +49,13 @@ public:
         NVS.setFloat(KEY_TEMP_OFFSET, offset);
     }
 
-    void saveLedColor(const u8_t color)
+    void saveLedColor(const HsvColor_t color)
     {
-        ESP_LOGI(TAG_SETTINGS, "Save %s %d", KEY_LED_COLOR, color);
-        NVS.setInt(KEY_LED_COLOR, color);
-    }
-
-    void saveLedBrightness(const u8_t brightness)
-    {
-        ESP_LOGI(TAG_SETTINGS, "Save %s %d", KEY_LED_BRIGHTNESS, brightness);
-        NVS.setInt(KEY_LED_BRIGHTNESS, brightness);
+        ESP_LOGI(TAG_SETTINGS, "Save col %d %d %d", color.h, color.s, color.v);
+        NVS.setInt(KEY_LED_COLOR_H, color.h, false);
+        NVS.setInt(KEY_LED_COLOR_S, color.s, false);
+        NVS.setInt(KEY_LED_COLOR_V, color.v, false);
+        NVS.commit();
     }
 };
 

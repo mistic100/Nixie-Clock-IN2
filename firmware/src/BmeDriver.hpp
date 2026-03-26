@@ -16,9 +16,6 @@ class BmeDriver
 {
 private:
     Adafruit_BME280 _bme280;
-    
-    volatile float _offset;
-    volatile bool _offset_changed = false;
 
     void (*_on_data)(bme_data_t);
 
@@ -31,28 +28,15 @@ public:
             delay(1000);
         }
 
-        _offset = settings.tempOffset();
-        _bme280.setTemperatureCompensation(_offset);
+        auto offset = settings.tempOffset();
+        _bme280.setTemperatureCompensation(offset);
     }
 
     void loop()
     {
         EVERY_N_SECONDS(TEMP_UPDATE_INTERVAL_S)
         {
-            bme_data_t data = {
-                .temp = _bme280.readTemperature(),
-                .humi = _bme280.readHumidity(),
-            };
-
-            ESP_LOGI(TAG_BME280, "Temp: %f, Humi: %f", data.temp, data.humi);
-
-            _on_data(data);
-        }
-
-        if (_offset_changed)
-        {
-            ESP_LOGI(TAG_BME280, "Offset: %d", _offset);
-            _offset_changed = false;
+            update();
         }
     }
 
@@ -61,27 +45,27 @@ public:
         _on_data = callback;
     }
 
-    const float offset() const
+    void setOffset(float offset)
     {
-        return _offset;
+        ESP_LOGI(TAG_BME280, "Offset: %f", offset);
+        
+        _bme280.setTemperatureCompensation(offset);
+        update();
+
+        settings.saveTempOffset(offset);
     }
 
-    void saveOffset()
+private:
+    void update()
     {
-        _bme280.setTemperatureCompensation(_offset);
-        settings.saveTempOffset(_offset);
-    }
+        bme_data_t data = {
+            .temp = _bme280.readTemperature(),
+            .humi = _bme280.readHumidity(),
+        };
 
-    void incOffset()
-    {
-        _offset += 0.1;
-        _offset_changed = true;
-    }
+        ESP_LOGI(TAG_BME280, "Temp: %f, Humi: %f", data.temp, data.humi);
 
-    void decOffset()
-    {
-        _offset -= 0.1;
-        _offset_changed = true;
+        _on_data(data);
     }
 };
 

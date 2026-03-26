@@ -11,14 +11,14 @@ struct DateImpl
     u8_t _strWidth;
     int _scrollPos = MATRIX_WIDTH;
 
-    void init(const tm &timeinfo)
+    void init(const tm* timeinfo)
     {
         #ifdef LOCALIZED_DATE
         snprintf(_buffer, sizeof(_buffer), "%s %02d %s %d", 
-            DAY_NAMES[timeinfo.tm_wday], 
-            timeinfo.tm_mday, 
-            MONTH_NAMES[timeinfo.tm_mon], 
-            timeinfo.tm_year + 1900);
+            DAY_NAMES[timeinfo->tm_wday], 
+            timeinfo->tm_mday, 
+            MONTH_NAMES[timeinfo->tm_mon], 
+            timeinfo->tm_year + 1900);
         #else
         strftime(_buffer, sizeof(_buffer), "%a %d %b %Y", &timeinfo);
         #endif

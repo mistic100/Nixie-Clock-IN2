@@ -11,7 +11,7 @@ class NixieDriver
 {
 private:
     byte _data[32];
-    bool _on = true;
+    bool _state = true;
     bool _dots = false;
     bool _changed = false;
     s8_t _antipoisoning_timer = -1;
@@ -34,7 +34,7 @@ public:
     {
         EVERY_N_SECONDS(1)
         {
-            if (_on)
+            if (_state)
             {
                 _dots = !_dots;
                 digitalWrite(DOTS, _dots);
@@ -43,7 +43,7 @@ public:
 
         EVERY_N_SECONDS(ANTI_POISONING_INTERVAL_S)
         {
-            if (_on)
+            if (_state)
             {
                 ESP_LOGI(TAG_NIXIE, "Start anti poisoning");
                 _antipoisoning_timer = 0;
@@ -62,14 +62,14 @@ public:
         {
             _changed = false;
             
-            if (_on)
+            if (_state)
             {
                 auto timeinfo = timeKeeper.getTime();
 
-                u8_t h10 = timeinfo.tm_hour / 10;
-                u8_t h = timeinfo.tm_hour % 10;
-                u8_t m10 = timeinfo.tm_min / 10;
-                u8_t m = timeinfo.tm_min % 10;
+                u8_t h10 = timeinfo->tm_hour / 10;
+                u8_t h = timeinfo->tm_hour % 10;
+                u8_t m10 = timeinfo->tm_min / 10;
+                u8_t m = timeinfo->tm_min % 10;
 
                 showDigits(h10, h, m10, m);
                 digitalWrite(DRIVER_OE, HIGH);
@@ -82,15 +82,15 @@ public:
         }
     }
 
-    void setOn(bool on)
+    void setState(bool state)
     {
-        _on = on;
+        _state = state;
         _changed = true;
     }
 
     void update()
     {
-        if (_on)
+        if (_state)
         {
             _changed = true;
         }

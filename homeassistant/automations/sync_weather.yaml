@@ -1,0 +1,11 @@
+alias: Sync weather to IN-2 Clock
+triggers:
+  - hours: /1
+    trigger: time_pattern
+actions:
+  - action: select.select_option
+    metadata: {}
+    target:
+      entity_id: select.in_2_clock_weather_code_custom
+    data:
+      option: "{{ states('weather.maison') }}"

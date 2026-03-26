@@ -29,6 +29,9 @@
 #define NUM_LEDS 5
 #define LEDS_ORDER LED_COLOR_ORDER_RGB
 
+// https://github.com/esp8266/Arduino/blob/master/cores/esp8266/TZ.h
+#define TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3"
+
 #define LOCALIZED_DATE
 
 #ifdef LOCALIZED_DATE

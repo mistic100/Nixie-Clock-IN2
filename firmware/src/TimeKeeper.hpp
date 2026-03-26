@@ -7,31 +7,29 @@
 class TimeKeeper
 {
 private:
-    struct tm _timeinfo;
-
     time_t _next_minute = 60;
+
     void (*_on_minute)(void);
 
 public:
-    void setSystemTime(time_t now)
+    void setTime(tm &timeinfo)
     {
+        time_t now = mktime(&timeinfo);
         struct timeval tv = {.tv_sec = now, .tv_usec = 0};
         settimeofday(&tv, NULL);
 
-        localtime_r(&now, &_timeinfo);
-
         ESP_LOGI(TAG_TIME,
             "%04d-%02d-%02d %02d:%02d:%02d",
-            _timeinfo.tm_year + 1900,
-            _timeinfo.tm_mon + 1,
-            _timeinfo.tm_mday,
-            _timeinfo.tm_hour,
-            _timeinfo.tm_min,
-            _timeinfo.tm_sec);
+            timeinfo.tm_year + 1900,
+            timeinfo.tm_mon + 1,
+            timeinfo.tm_mday,
+            timeinfo.tm_hour,
+            timeinfo.tm_min,
+            timeinfo.tm_sec);
 
         _next_minute = (now / 60 + 1) * 60;
 
-        if (_timeinfo.tm_sec == 0)
+        if (timeinfo.tm_sec == 0)
         {
             _on_minute();
         }
@@ -44,7 +42,7 @@ public:
 
     void loop()
     {
-        time_t now;
+        static time_t now;
         time(&now);
 
         if (_next_minute <= now)
@@ -55,14 +53,11 @@ public:
         }
     }
 
-    const struct tm &getTime()
+    const tm* getTime()
     {
-        time_t now;
+        static time_t now;
         time(&now);
-
-        localtime_r(&now, &_timeinfo);
-
-        return _timeinfo;
+        return localtime(&now);
     }
 };
 

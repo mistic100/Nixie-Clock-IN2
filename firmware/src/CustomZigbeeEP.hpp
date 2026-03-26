@@ -5,28 +5,27 @@
 #define CUSTOM_CLUSTER_ID 0xFF01
 #define ATTR_ACTION_ID 0x0000
 #define ATTR_WEATHER_ID 0x0001
+#define ATTR_TEMP_OFFSET 0x0002
 
 #define TAG_ZB_CUSTOM "ZB_CUSTOM"
 
 /**
  * @brief Custom endpoint
- * - weather code cluster
- * - time cluster
+ * - custom cluster
+ *      - weather code
+ *      - temp offset
  * - send action command
  */
 class CustomZigbeeEP : public ZigbeeEP
 {
 private:
-    time_t _read_time;
-
-    void (*_on_time)(time_t);
     void (*_on_weather)(u8_t);
+    void (*_on_temp_offset)(int16_t);
 
 public:
     CustomZigbeeEP(u8_t endpoint) : ZigbeeEP(endpoint)
     {
         _device_id = ESP_ZB_HA_CUSTOM_ATTR_DEVICE_ID;
-
         _cluster_list = esp_zb_zcl_cluster_list_create();
 
         esp_zb_on_off_switch_cfg_t switch_cfg = ESP_ZB_DEFAULT_ON_OFF_SWITCH_CONFIG();
@@ -36,6 +35,8 @@ public:
         esp_zb_attribute_list_t *custom_cluster = esp_zb_zcl_attr_list_create(CUSTOM_CLUSTER_ID);
         u8_t no_weather = 0;
         esp_zb_custom_cluster_add_custom_attr(custom_cluster, ATTR_WEATHER_ID, ESP_ZB_ZCL_ATTR_TYPE_U8, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &no_weather);
+        int16_t offset_zero = 0;
+        esp_zb_custom_cluster_add_custom_attr(custom_cluster, ATTR_TEMP_OFFSET, ESP_ZB_ZCL_ATTR_TYPE_S16, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &offset_zero);
         esp_zb_cluster_list_add_custom_cluster(_cluster_list, custom_cluster, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
 
         _ep_config = {
@@ -43,40 +44,44 @@ public:
             .app_profile_id = ESP_ZB_AF_HA_PROFILE_ID,
             .app_device_id = ESP_ZB_HA_CUSTOM_ATTR_DEVICE_ID,
             .app_device_version = 0};
-
-        addTimeCluster();
     }
-
-    void onTime(void (*callback)(time_t)) { _on_time = callback; }
 
     void onWeather(void (*callback)(u8_t)) { _on_weather = callback; }
 
+    void onTempOffset(void (*callback)(int16_t)) { _on_temp_offset = callback; }
+
+    bool setTempOffset(uint16_t offset)
+    {
+        esp_zb_zcl_status_t ret = ESP_ZB_ZCL_STATUS_SUCCESS;
+        ESP_LOGD(TAG_ZB_CUSTOM, "Settings temp offset %d", offset);
+        esp_zb_lock_acquire(portMAX_DELAY);
+        ret = esp_zb_zcl_set_attribute_val(
+            _endpoint, CUSTOM_CLUSTER_ID, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE, ATTR_TEMP_OFFSET, &offset, false
+        );
+        esp_zb_lock_release();
+        if (ret != ESP_ZB_ZCL_STATUS_SUCCESS)
+        {
+            ESP_LOGE(TAG_ZB_CUSTOM, "Failed to set tmep offset: 0x%x: %s", ret, esp_zb_zcl_status_to_name(ret));
+            return false;
+        }
+        return true;
+    }
+
     void zbAttributeSet(const esp_zb_zcl_set_attr_value_message_t *msg) override
     {
-        if (msg->info.cluster == ESP_ZB_ZCL_CLUSTER_ID_TIME)
-        {
-            if (msg->attribute.id == ESP_ZB_ZCL_ATTR_TIME_TIME_ID)
-            {
-                _read_time = *(u32_t *)msg->attribute.data.value;
-            }
-            else if (msg->attribute.id == ESP_ZB_ZCL_ATTR_TIME_TIME_ZONE_ID)
-            {
-                u32_t offset = *(u32_t *)msg->attribute.data.value;
-                ESP_LOGI(TAG_ZB_CUSTOM, "Received time %d and offset %d", _read_time, offset);
-                _on_time(_read_time + offset);
-            }
-            else
-            {
-                ESP_LOGW(TAG_ZB_CUSTOM, "Received message ignored. Attribute ID: %d not supported for Time cluster", msg->attribute.id);
-            }
-        }
-        else if (msg->info.cluster == CUSTOM_CLUSTER_ID)
+        if (msg->info.cluster == CUSTOM_CLUSTER_ID)
         {
             if (msg->attribute.id == ATTR_WEATHER_ID)
             {
                 u8_t weather = *(u8_t *)msg->attribute.data.value;
                 ESP_LOGI(TAG_ZB_CUSTOM, "Received weather code %d", weather);
                 _on_weather(weather);
+            }
+            else if (msg->attribute.id == ATTR_TEMP_OFFSET)
+            {
+                int16_t offset = *(int16_t *)msg->attribute.data.value;
+                ESP_LOGI(TAG_ZB_CUSTOM, "Received temp offset %d", offset);
+                _on_temp_offset(offset);
             }
             else
             {
@@ -92,7 +97,7 @@ public:
     void sendEvent(u8_t button_id, u8_t action)
     {
         ESP_LOGI(TAG_ZB_CUSTOM, "Send event %d %d", button_id, action);
-        u8_t payload[2] = {button_id, (u8_t)0};
+        u8_t payload[2] = {button_id, action};
 
         esp_zb_zcl_custom_cluster_cmd_req_t req = {0};
 

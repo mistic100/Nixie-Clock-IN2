@@ -32,11 +32,12 @@ class MatrixDriver
 private:
     Adafruit_IS31FL3731_With_Brightness _matrix;
 
+    bool _state = true;
+    bool _state_changed = false;
+
     volatile u8_t _brightness;
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
     volatile bool _mode_changed = false;
-
-    bool _on = true;
 
     DateImpl _date;
     FireImpl _fire;
@@ -59,7 +60,17 @@ public:
 
     void loop()
     {
-        if (!_on)
+        if (_state_changed)
+        {
+            _state_changed = false;
+
+            if (!_state)
+            {
+                _matrix.clear();
+            }
+        }
+
+        if (!_state)
         {
             return;
         }
@@ -109,7 +120,7 @@ public:
     {
         if (_brightness < 10)
         {
-            _brightness++;
+            _brightness = _brightness +1;
             _matrix.setBrightness(_brightness);
         }
     }
@@ -118,7 +129,7 @@ public:
     {
         if (_brightness > 1)
         {
-            _brightness--;
+            _brightness = _brightness - 1;
             _matrix.setBrightness(_brightness);
         }
     }
@@ -128,13 +139,14 @@ public:
         settings.saveScreenBrightness(_brightness);
     }
 
-    void setOn(bool on)
+    void setState(bool state)
     {
-        _on = on;
+        _state = state;
+        _state_changed = true;
 
-        if (on)
+        if (state)
         {
-            applyMode();
+            _mode_changed = true;
         }
         else
         {
@@ -142,7 +154,6 @@ public:
             {
                 setMode((matrix_mode_t) 0);
             }
-            _matrix.clear();
         }
     }
 

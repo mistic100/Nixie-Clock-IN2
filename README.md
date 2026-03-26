@@ -12,6 +12,7 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
 - 3 buttons and 1 rotary encoder
 - Zigbee connectivity
   - receive date-time
+  - receive weather
   - send room temperature and humidity
   - can be toggled on/off
   - 2 generic buttons send click, double click, long click events
@@ -41,12 +42,3 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
 - MPSA42 high voltage NPN transistor
 - USB-C connector
 - resistors, capacitors, diodes...
-
-
-### Menu items
-
-- MBR : Matrix brightness
-- TOF : Temperature offset
-- LCO : LEDs color
-- LBR : LEDs brightness
-- BAK : Back

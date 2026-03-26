@@ -29,6 +29,9 @@ void setup()
 {
     Serial.begin(115200);
 
+    setenv("TZ", TIMEZONE, 1);
+    tzset();
+
     settings.begin();
 
     encoderButton.setLongClickTime(LONG_CLICK_MS);
@@ -105,16 +108,20 @@ void setup()
     zigbeeCtrl.onMainSwitchChange([](bool state)
                                   {
         ESP_LOGI(TAG_MAIN, "Main state %d", state);
-        leds.setOn(state);
-        manager.setOn(state);
-        matrix.setOn(state);
-        nixieDriver.setOn(state); });
+        leds.setState(state);
+        manager.setState(state);
+        matrix.setState(state);
+        nixieDriver.setState(state); });
 
-    zigbeeCtrl.onTime([](time_t now)
-                      { timeKeeper.setSystemTime(now); });
+    zigbeeCtrl.onLedColorChange([](bool state, uint8_t hue, uint8_t saturation, uint8_t value)
+                                {
+        leds.setColor(hue, saturation, value); });
 
     zigbeeCtrl.onWeather([](u8_t weatherCode)
                          { matrix.setWeather(weatherCode); });
+
+    zigbeeCtrl.onTempOffset([](int16_t offset)
+                            { bme.setOffset(offset / 100.0); });
 
     timeKeeper.onMinute([]()
                         {
@@ -137,6 +144,10 @@ void setup()
     delay(2000);
 
     ESP_LOGI(TAG_MAIN, "Ready");
+
+    zigbeeCtrl.requestTime();
+    matrix.updateTime();
+    nixieDriver.update();
 }
 
 void loop()
@@ -152,4 +163,9 @@ void loop()
     matrix.loop();
     leds.loop();
     nixieDriver.loop();
+
+    EVERY_N_MINUTES(10)
+    {
+        zigbeeCtrl.requestTime();
+    }
 }
