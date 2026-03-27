@@ -16,14 +16,14 @@ struct RainImpl
         auto rain = matrix->_buffer;
         auto state = matrix->_buffer2;
 
-        for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+        for (u8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+            for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
             {
                 rain[x][y] = 0;
             }
 
-            state[x][RAIN_HEAD_POS] = random(0, MATRIX_HEIGHT * 2);
+            state[x][RAIN_HEAD_POS] = random(0, SCREEN_HEIGHT * 2);
             state[x][RAIN_DROP_SPEED] = random(2, 6);
             state[x][RAIN_REMAINING_TICKS] = state[x][RAIN_DROP_SPEED];
         }
@@ -37,16 +37,16 @@ struct RainImpl
             auto state = matrix->_buffer2;
 
             // Fade the entire screen
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
-                for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+                for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
                 {
                     rain[x][y] = qsub8(rain[x][y], 20);
                 }
             }
 
             // Move the heads down
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
                 state[x][RAIN_REMAINING_TICKS]--;
 
@@ -54,7 +54,7 @@ struct RainImpl
                 if (state[x][RAIN_REMAINING_TICKS] == 0)
                 {
                     // Draw the head
-                    if (state[x][RAIN_HEAD_POS] < MATRIX_HEIGHT)
+                    if (state[x][RAIN_HEAD_POS] < SCREEN_HEIGHT)
                     {
                         rain[x][state[x][RAIN_HEAD_POS]] = 255;
                     }
@@ -63,7 +63,7 @@ struct RainImpl
 
                     // Reset the drop when it goes off screen
                     // We use a range larger than HEIGHT to create gaps between drops
-                    if (state[x][RAIN_HEAD_POS] > MATRIX_HEIGHT * 2)
+                    if (state[x][RAIN_HEAD_POS] > SCREEN_HEIGHT * 2)
                     {
                         state[x][RAIN_HEAD_POS] = 0;
                         state[x][RAIN_DROP_SPEED] = random(2, 6);
@@ -75,9 +75,9 @@ struct RainImpl
 
             matrix->beginFrame();
 
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
-                for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+                for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
                 {
                     matrix->drawPixel(x, y, rain[x][y]);
                 }

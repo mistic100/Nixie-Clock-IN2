@@ -1,15 +1,33 @@
 #pragma once
 
-#define MATRIX_ROTATION 0
-#define MATRIX_WIDTH 16
-#define MATRIX_HEIGHT 9
+// zigbee configuration
+#define ZIGBEE_MANUFACTURER "StrangePlanet"
+#define ZIGBEE_MODEL "IN-2-Clock"
+#define ZIGBEE_ENDPOINT_MAIN 1
+#define ZIGBEE_ENDPOINT_BME280 2
+#define ZIGBEE_ENDPOINT_LEDS 3
+#define ZIGBEE_ENDPOINT_CUSTOM 10
+#define ZIGBEE_CUSTOM_CLUSTER_ID 0xFF01
+#define ZIGBEE_ATTR_ACTION_ID 0x0000
+#define ZIGBEE_ATTR_WEATHER_ID 0x0001
+#define ZIGBEE_ATTR_TEMP_OFFSET 0x0002
 
+// screen matrix configuration
+#define SCREEN_ROTATION 0
+#define SCREEN_WIDTH 16
+#define SCREEN_HEIGHT 9
+#define SCREEN_BRIGHTNESS 20
+
+// nixie driver configuration
 #define DRIVER_DIN 2
 #define DRIVER_CLK 1
 #define DRIVER_OE 0
 
 #define DOTS 3
 
+#define ANTI_POISONING_INTERVAL_S 20 * 60
+
+// buttons configuration
 #define ENCODER_A 9
 #define ENCODER_B 14
 #define ENCODER_SW 20
@@ -21,17 +39,16 @@
 #define DOUBLE_CLICK_MS 300
 #define LONG_CLICK_MS 500
 
+// bme280 configuration
 #define TEMP_UPDATE_INTERVAL_S 60
 
-#define ANTI_POISONING_INTERVAL_S 20 * 60
-
+// leds configuration
 #define LEDS_PIN RGB_BUILTIN
-#define NUM_LEDS 5
+#define NUM_LEDS 6 // built-in + 4 + 1 for safety
 #define LEDS_ORDER LED_COLOR_ORDER_RGB
 
-// https://github.com/esp8266/Arduino/blob/master/cores/esp8266/TZ.h
-#define TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3"
-
+// datetime configuration
+#define TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3" // https://github.com/esp8266/Arduino/blob/master/cores/esp8266/TZ.h
 #define LOCALIZED_DATE
 
 #ifdef LOCALIZED_DATE
@@ -61,6 +78,7 @@ const char* MONTH_NAMES[12] = {
 };
 #endif
 
+// nixie driver configuration
 const uint8_t PIN_H10[6] = {
     1,
     2,
@@ -100,6 +118,3 @@ const uint8_t PIN_M[10] = {
     26,
     25,
     24};
-
-const char* ZIGBEE_MANUFACTURER = "StrangePlanet";
-const char* ZIGBEE_MODEL = "IN-2-Clock";

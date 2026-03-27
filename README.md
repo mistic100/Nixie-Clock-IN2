@@ -15,7 +15,7 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
   - receive weather
   - send room temperature and humidity
   - can be toggled on/off
-  - 2 generic buttons send click, double click, long click events
+  - 3 generic buttons send click, double click, long click events
 - small LED matrix with multiple screens
   - scrolling date
   - temperature

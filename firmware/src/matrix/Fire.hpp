@@ -10,9 +10,9 @@ struct FireImpl
     {
         auto fire = matrix->_buffer;
 
-        for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+        for (u8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+            for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
             {
                 fire[x][y] = 0;
             }
@@ -26,19 +26,19 @@ struct FireImpl
             auto fire = matrix->_buffer;
 
             // Add random embers to the bottom row
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
-                fire[x][MATRIX_HEIGHT - 1] = random(64, 256);
+                fire[x][SCREEN_HEIGHT - 1] = random(64, 256);
             }
 
             // Propagate heat upwards
-            for (u8_t y = 0; y < MATRIX_HEIGHT - 1; y++)
+            for (u8_t y = 0; y < SCREEN_HEIGHT - 1; y++)
             {
-                for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+                for (u8_t x = 0; x < SCREEN_WIDTH; x++)
                 {
                     // Average the pixels below and to the sides to create a spread
-                    u8_t left = (x > 0) ? fire[x - 1][y + 1] : fire[MATRIX_WIDTH - 1][y + 1];
-                    u8_t right = (x < MATRIX_WIDTH - 1) ? fire[x + 1][y + 1] : fire[0][y + 1];
+                    u8_t left = (x > 0) ? fire[x - 1][y + 1] : fire[SCREEN_WIDTH - 1][y + 1];
+                    u8_t right = (x < SCREEN_WIDTH - 1) ? fire[x + 1][y + 1] : fire[0][y + 1];
                     u8_t below = fire[x][y + 1];
 
                     u8_t newHeat = (left + right + below + below) / 4;
@@ -57,9 +57,9 @@ struct FireImpl
 
             matrix->beginFrame();
 
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
-                for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+                for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
                 {
                     matrix->drawPixel(x, y, fire[x][y]);
                 }

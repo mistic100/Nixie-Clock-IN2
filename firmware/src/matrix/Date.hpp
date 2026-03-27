@@ -9,7 +9,7 @@ struct DateImpl
 {
     char _buffer[16];
     u8_t _strWidth;
-    int _scrollPos = MATRIX_WIDTH;
+    int _scrollPos = SCREEN_WIDTH;
 
     void init(const tm* timeinfo)
     {
@@ -32,7 +32,7 @@ struct DateImpl
             _scrollPos--;
             if (_scrollPos < -_strWidth)
             {
-                _scrollPos = MATRIX_WIDTH;
+                _scrollPos = SCREEN_WIDTH;
             }
 
             matrix->beginFrame();

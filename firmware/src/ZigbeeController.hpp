@@ -18,10 +18,10 @@ typedef enum
 class ZigbeeController
 {
 private:
-    ZigbeeLight _mainSwitch = ZigbeeLight(1);
-    ZigbeeTempSensor _tempSensor = ZigbeeTempSensor(2);
-    ZigbeeColorDimmableLight _leds = ZigbeeColorDimmableLight(3);
-    CustomZigbeeEP _customEp = CustomZigbeeEP(10);
+    ZigbeeLight _mainSwitch = ZigbeeLight(ZIGBEE_ENDPOINT_MAIN);
+    ZigbeeTempSensor _tempSensor = ZigbeeTempSensor(ZIGBEE_ENDPOINT_BME280);
+    ZigbeeColorDimmableLight _leds = ZigbeeColorDimmableLight(ZIGBEE_ENDPOINT_LEDS);
+    CustomZigbeeEP _customEp = CustomZigbeeEP(ZIGBEE_ENDPOINT_CUSTOM);
 
 public:
     void begin()
@@ -72,17 +72,35 @@ public:
         _customEp.setTempOffset(settings.tempOffset() * 100);
     }
 
-    void toggleMainSwitch() { _mainSwitch.setLight(!_mainSwitch.getLightState()); }
+    void toggleMainSwitch()
+    {
+        _mainSwitch.setLight(!_mainSwitch.getLightState());
+    }
 
-    void onWeather(void (*callback)(uint8_t)) { _customEp.onWeather(callback); }
+    void onMainSwitchChange(void (*callback)(bool))
+    {
+        _mainSwitch.onLightChange(callback);
+    }
 
-    void onTempOffset(void (*callback)(int16_t)) { _customEp.onTempOffset(callback); }
+    void onLedColorChange(ZigbeeColorLightHsvCallback callback)
+    {
+        _leds.onLightChangeHsv(callback);
+    }
 
-    void onMainSwitchChange(void (*callback)(bool)) { _mainSwitch.onLightChange(callback); }
+    void onWeather(void (*callback)(uint8_t))
+    {
+        _customEp.onWeather(callback);
+    }
 
-    void onLedColorChange(ZigbeeColorLightHsvCallback callback) { _leds.onLightChangeHsv(callback); }
+    void onTempOffset(void (*callback)(int16_t))
+    {
+        _customEp.onTempOffset(callback);
+    }
 
-    void sendBtnEvent(u8_t button_id, btn_action_t action) { _customEp.sendEvent(button_id, action); }
+    void sendBtnEvent(u8_t button_id, btn_action_t action)
+    {
+        _customEp.sendEvent(button_id, action);
+    }
 
     void setTempAndHumidity(float temp, float humi)
     {

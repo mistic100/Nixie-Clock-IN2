@@ -10,9 +10,9 @@ struct GameOfLifeImpl
     {
         auto current = matrix->_buffer;
         
-        for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+        for (u8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+            for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
             {
                 current[x][y] = random(2);
             }
@@ -28,9 +28,9 @@ struct GameOfLifeImpl
             bool isStatic = true;
 
             // compute next generation
-            for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+            for (u8_t x = 0; x < SCREEN_WIDTH; x++)
             {
-                for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+                for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
                 {
                     u8_t neighbors = countNeighbors(x, y, current);
 
@@ -59,9 +59,9 @@ struct GameOfLifeImpl
             {
                 matrix->beginFrame();
 
-                for (u8_t x = 0; x < MATRIX_WIDTH; x++)
+                for (u8_t x = 0; x < SCREEN_WIDTH; x++)
                 {
-                    for (u8_t y = 0; y < MATRIX_HEIGHT; y++)
+                    for (u8_t y = 0; y < SCREEN_HEIGHT; y++)
                     {
                         if (current[x][y])
                         {
@@ -76,7 +76,7 @@ struct GameOfLifeImpl
         }
     }
 
-    u8_t countNeighbors(u8_t x, u8_t y, u8_t current[MATRIX_WIDTH][MATRIX_HEIGHT])
+    u8_t countNeighbors(u8_t x, u8_t y, u8_t current[SCREEN_WIDTH][SCREEN_HEIGHT])
     {
         u8_t count = 0;
         for (s8_t i = -1; i <= 1; i++)
@@ -88,8 +88,8 @@ struct GameOfLifeImpl
                     continue;
                 }
 
-                u8_t nx = (x + i + MATRIX_WIDTH) % MATRIX_WIDTH;
-                u8_t ny = (y + j + MATRIX_HEIGHT) % MATRIX_HEIGHT;
+                u8_t nx = (x + i + SCREEN_WIDTH) % SCREEN_WIDTH;
+                u8_t ny = (y + j + SCREEN_HEIGHT) % SCREEN_HEIGHT;
 
                 if (current[nx][ny])
                 {

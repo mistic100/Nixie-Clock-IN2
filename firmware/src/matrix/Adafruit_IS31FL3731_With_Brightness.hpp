@@ -11,12 +11,11 @@ class Adafruit_IS31FL3731_With_Brightness
 {
 private:
     Adafruit_IS31FL3731 _matrix;
-    volatile u8_t _brightness = 10;
     u8_t _frame = 0;
 
 public:
-    u8_t _buffer[MATRIX_WIDTH][MATRIX_HEIGHT];
-    u8_t _buffer2[MATRIX_WIDTH][MATRIX_HEIGHT];
+    u8_t _buffer[SCREEN_WIDTH][SCREEN_HEIGHT];
+    u8_t _buffer2[SCREEN_WIDTH][SCREEN_HEIGHT];
 
     void begin()
     {
@@ -26,14 +25,9 @@ public:
             delay(1000);
         }
 
-        _matrix.setRotation(MATRIX_ROTATION);
+        _matrix.setRotation(SCREEN_ROTATION);
         _matrix.setFont(&smallest_pixel_75pt7b);
         _matrix.setTextWrap(false);
-    }
-
-    const void setBrightness(const u8_t brightness)
-    {
-        _brightness = brightness;
     }
 
     void beginFrame()
@@ -83,6 +77,6 @@ public:
 private:
     inline u8_t getColor(u8_t color)
     {
-        return scale8(color, _brightness * 25.5);
+        return scale8(color, SCREEN_BRIGHTNESS);
     }
 };

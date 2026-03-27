@@ -22,9 +22,7 @@ typedef enum
     FIRE,
     RAIN,
 
-    MATRIX_MODE_COUNT,
-
-    MENU
+    MATRIX_MODE_COUNT
 } matrix_mode_t;
 
 class MatrixDriver
@@ -35,7 +33,6 @@ private:
     bool _state = true;
     bool _state_changed = false;
 
-    volatile u8_t _brightness;
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
     volatile bool _mode_changed = false;
 
@@ -50,10 +47,7 @@ private:
 public:
     void begin()
     {
-        _brightness = settings.screenBrightess();
-
         _matrix.begin();
-        _matrix.setBrightness(_brightness);
 
         applyMode();
     }
@@ -109,34 +103,6 @@ public:
     const matrix_mode_t mode() const
     {
         return _mode;
-    }
-
-    const u8_t brightness() const
-    {
-        return _brightness;
-    }
-
-    void incBrightness()
-    {
-        if (_brightness < 10)
-        {
-            _brightness = _brightness +1;
-            _matrix.setBrightness(_brightness);
-        }
-    }
-
-    void decBrightness()
-    {
-        if (_brightness > 1)
-        {
-            _brightness = _brightness - 1;
-            _matrix.setBrightness(_brightness);
-        }
-    }
-
-    void saveBrightness()
-    {
-        settings.saveScreenBrightness(_brightness);
     }
 
     void setState(bool state)
@@ -195,6 +161,10 @@ public:
 
     void nextMode()
     {
+        if (!_state)
+        {
+            return;
+        }
         u8_t next = (u8_t)_mode + 1;
         if (next >= MATRIX_MODE_COUNT)
         {
@@ -208,6 +178,10 @@ public:
 
     void prevMode()
     {
+        if (!_state)
+        {
+            return;
+        }
         s8_t prev = (s8_t)_mode - 1;
         if (prev < 0)
         {
@@ -217,13 +191,6 @@ public:
         {
             setMode((matrix_mode_t)prev);
         }
-    }
-
-    void printMenu(const char str[])
-    {
-        _matrix.clear();
-        _matrix.drawRect(0, 0, MATRIX_WIDTH, MATRIX_HEIGHT, 16);
-        _matrix.print(str, 1, 6);
     }
 
 private:

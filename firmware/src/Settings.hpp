@@ -4,7 +4,6 @@
 
 #define TAG_SETTINGS "SETTINGS"
 
-static const char *KEY_SCREEN_BRIGHTNESS = "bri";
 static const char *KEY_TEMP_OFFSET = "tof";
 static const char *KEY_LED_COLOR_H = "colh";
 static const char *KEY_LED_COLOR_S = "cols";
@@ -16,11 +15,6 @@ public:
     void begin()
     {
         NVS.begin();
-    }
-
-    const u8_t screenBrightess() const
-    {
-        return NVS.getInt(KEY_SCREEN_BRIGHTNESS, 10);
     }
 
     const float tempOffset() const
@@ -35,12 +29,6 @@ public:
             NVS.getInt(KEY_LED_COLOR_S, 0),
             NVS.getInt(KEY_LED_COLOR_V, 255)
         );
-    }
-
-    void saveScreenBrightness(const u8_t brightness)
-    {
-        ESP_LOGI(TAG_SETTINGS, "Save %s %d", KEY_SCREEN_BRIGHTNESS, brightness);
-        NVS.setInt(KEY_SCREEN_BRIGHTNESS, brightness);
     }
 
     void saveTempOffset(float offset)

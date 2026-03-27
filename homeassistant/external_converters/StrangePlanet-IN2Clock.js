@@ -2,12 +2,11 @@
 import * as m from 'zigbee-herdsman-converters/lib/modernExtend';
 import { presets as e } from 'zigbee-herdsman-converters/lib/exposes';
 import { logger } from 'zigbee-herdsman-converters/lib/logger';
-import { OneJanuary2000 } from 'zigbee-herdsman-converters/lib/constants';
 
 const CUSTOM_CLUSTER_NAME = 'customStrangeplanet';
 
 const CUSTOM_CLUSTER_ID = 0xFF01; // manuSpecificSinope
-const ENDPOINT_CUSTOM_ID = 10;
+const CUSTOM_ENDPOINT_ID = 10;
 const ATTR_ACTION_ID = 0x0000;
 const ATTR_WEATHER_ID = 0x0001;
 const ATTR_TEMP_OFFSET = 0x0002;
@@ -28,7 +27,7 @@ export default {
             [ENDPOINT_MAIN]: 1,
             [ENDPOINT_BME280]: 2,
             [ENDPOINT_LEDS]: 3,
-            [ENDPOINT_CUSTOM]: ENDPOINT_CUSTOM_ID,
+            [ENDPOINT_CUSTOM]: CUSTOM_ENDPOINT_ID,
         } }),
 
         m.onOff({
@@ -112,7 +111,7 @@ export default {
             type: ['raw'],
             convert: (model, msg, publish, options, meta) => {
                 logger.debug(`[IN-2-Clock] Raw data: ${JSON.stringify(msg.data)}`);
-                if (msg.endpoint.ID === ENDPOINT_CUSTOM_ID) {
+                if (msg.endpoint.ID === CUSTOM_ENDPOINT_ID) {
                     const buttonId = msg.data[3] ?? 0;
                     const action = msg.data[4] ?? -1;
                     const actionStr = ['click', 'double_click', 'long_click'][action];
@@ -125,9 +124,9 @@ export default {
     ],
     exposes: [
         e.action([
-          'click_1', 'click_2',
-          'long_click_1', 'long_click_2',
-          'double_click_1', 'double_click_2',
+          'click_1', 'click_2',, 'click_3',
+          'long_click_1', 'long_click_2', 'long_click_3',
+          'double_click_1', 'double_click_2', 'double_click_3',
         ]),
     ],
 };

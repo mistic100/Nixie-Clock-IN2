@@ -7,7 +7,6 @@
 #include "ZigbeeController.hpp"
 #include "BmeDriver.hpp"
 #include "Settings.hpp"
-#include "Manager.hpp"
 #include "MatrixDriver.hpp"
 #include "NixieDriver.hpp"
 #include "LedDriver.hpp"
@@ -37,7 +36,7 @@ void setup()
     encoderButton.setLongClickTime(LONG_CLICK_MS);
     button1.setLongClickTime(LONG_CLICK_MS);
     button2.setLongClickTime(LONG_CLICK_MS);
-    button3.setLongClickTime(10000); // Zigbee reset
+    button3.setLongClickTime(LONG_CLICK_MS);
 
     encoderButton.setDoubleClickTime(DOUBLE_CLICK_MS);
     button1.setDoubleClickTime(DOUBLE_CLICK_MS);
@@ -53,17 +52,17 @@ void setup()
     encoder.onUp([]()
                  { 
         ESP_LOGI(TAG_MAIN, "Encoder up");
-        manager.up(); });
+        matrix.nextMode(); });
 
     encoder.onDown([]()
                    { 
         ESP_LOGI(TAG_MAIN, "Encoder down");
-        manager.down(); });
+        matrix.prevMode(); });
 
     encoderButton.setClickHandler([](Button2 &btn)
                                   { 
         ESP_LOGI(TAG_MAIN, "Encoder click");
-        manager.ok(); });
+        zigbeeCtrl.toggleMainSwitch(); });
 
     button1.setClickHandler([](Button2 &btn)
                             { 
@@ -98,18 +97,22 @@ void setup()
     button3.setClickHandler([](Button2 &btn)
                             { 
         ESP_LOGI(TAG_MAIN, "Btn 3 click");
-        zigbeeCtrl.toggleMainSwitch(); });
+        zigbeeCtrl.sendBtnEvent(3, CLICK); });
+
+    button3.setDoubleClickHandler([](Button2 &btn)
+                                  { 
+        ESP_LOGI(TAG_MAIN, "Btn 3 double click");
+        zigbeeCtrl.sendBtnEvent(3, DOUBLE_CLICK); });
 
     button3.setLongClickDetectedHandler([](Button2 &btn)
-                                        {
-        ESP_LOGI(TAG_MAIN, "Zigbee reset");
-        esp_zb_factory_reset(); });
+                                        { 
+        ESP_LOGI(TAG_MAIN, "Btn 3 long click");
+        zigbeeCtrl.sendBtnEvent(3, LONG_CLICK); });
 
     zigbeeCtrl.onMainSwitchChange([](bool state)
                                   {
         ESP_LOGI(TAG_MAIN, "Main state %d", state);
         leds.setState(state);
-        manager.setState(state);
         matrix.setState(state);
         nixieDriver.setState(state); });
 
@@ -137,7 +140,6 @@ void setup()
     matrix.begin();
     bme.begin();
     zigbeeCtrl.begin();
-    manager.begin();
     leds.begin();
     nixieDriver.begin();
 
@@ -159,7 +161,6 @@ void loop()
 
     timeKeeper.loop();
     bme.loop();
-    manager.loop();
     matrix.loop();
     leds.loop();
     nixieDriver.loop();

@@ -2,18 +2,12 @@
 
 #include <Zigbee.h>
 
-#define CUSTOM_CLUSTER_ID 0xFF01
-#define ATTR_ACTION_ID 0x0000
-#define ATTR_WEATHER_ID 0x0001
-#define ATTR_TEMP_OFFSET 0x0002
-
 #define TAG_ZB_CUSTOM "ZB_CUSTOM"
 
 /**
  * @brief Custom endpoint
- * - custom cluster
- *      - weather code
- *      - temp offset
+ * - weather code
+ * - temp offset
  * - send action command
  */
 class CustomZigbeeEP : public ZigbeeEP
@@ -32,11 +26,11 @@ public:
         esp_zb_cluster_list_add_basic_cluster(_cluster_list, esp_zb_basic_cluster_create(&(switch_cfg.basic_cfg)), ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
         esp_zb_cluster_list_add_identify_cluster(_cluster_list, esp_zb_identify_cluster_create(&(switch_cfg.identify_cfg)), ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
 
-        esp_zb_attribute_list_t *custom_cluster = esp_zb_zcl_attr_list_create(CUSTOM_CLUSTER_ID);
+        esp_zb_attribute_list_t *custom_cluster = esp_zb_zcl_attr_list_create(ZIGBEE_CUSTOM_CLUSTER_ID);
         u8_t no_weather = 0;
-        esp_zb_custom_cluster_add_custom_attr(custom_cluster, ATTR_WEATHER_ID, ESP_ZB_ZCL_ATTR_TYPE_U8, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &no_weather);
+        esp_zb_custom_cluster_add_custom_attr(custom_cluster, ZIGBEE_ATTR_WEATHER_ID, ESP_ZB_ZCL_ATTR_TYPE_U8, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &no_weather);
         int16_t offset_zero = 0;
-        esp_zb_custom_cluster_add_custom_attr(custom_cluster, ATTR_TEMP_OFFSET, ESP_ZB_ZCL_ATTR_TYPE_S16, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &offset_zero);
+        esp_zb_custom_cluster_add_custom_attr(custom_cluster, ZIGBEE_ATTR_TEMP_OFFSET, ESP_ZB_ZCL_ATTR_TYPE_S16, ESP_ZB_ZCL_ATTR_ACCESS_READ_WRITE, &offset_zero);
         esp_zb_cluster_list_add_custom_cluster(_cluster_list, custom_cluster, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
 
         _ep_config = {
@@ -56,7 +50,7 @@ public:
         ESP_LOGD(TAG_ZB_CUSTOM, "Settings temp offset %d", offset);
         esp_zb_lock_acquire(portMAX_DELAY);
         ret = esp_zb_zcl_set_attribute_val(
-            _endpoint, CUSTOM_CLUSTER_ID, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE, ATTR_TEMP_OFFSET, &offset, false
+            _endpoint, ZIGBEE_CUSTOM_CLUSTER_ID, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE, ZIGBEE_ATTR_TEMP_OFFSET, &offset, false
         );
         esp_zb_lock_release();
         if (ret != ESP_ZB_ZCL_STATUS_SUCCESS)
@@ -69,15 +63,15 @@ public:
 
     void zbAttributeSet(const esp_zb_zcl_set_attr_value_message_t *msg) override
     {
-        if (msg->info.cluster == CUSTOM_CLUSTER_ID)
+        if (msg->info.cluster == ZIGBEE_CUSTOM_CLUSTER_ID)
         {
-            if (msg->attribute.id == ATTR_WEATHER_ID)
+            if (msg->attribute.id == ZIGBEE_ATTR_WEATHER_ID)
             {
                 u8_t weather = *(u8_t *)msg->attribute.data.value;
                 ESP_LOGI(TAG_ZB_CUSTOM, "Received weather code %d", weather);
                 _on_weather(weather);
             }
-            else if (msg->attribute.id == ATTR_TEMP_OFFSET)
+            else if (msg->attribute.id == ZIGBEE_ATTR_TEMP_OFFSET)
             {
                 int16_t offset = *(int16_t *)msg->attribute.data.value;
                 ESP_LOGI(TAG_ZB_CUSTOM, "Received temp offset %d", offset);
@@ -106,10 +100,10 @@ public:
         req.zcl_basic_cmd.src_endpoint = _endpoint;
 
         req.address_mode = ESP_ZB_APS_ADDR_MODE_16_ENDP_PRESENT;
-        req.cluster_id = CUSTOM_CLUSTER_ID;
+        req.cluster_id = ZIGBEE_CUSTOM_CLUSTER_ID;
         req.profile_id = ESP_ZB_AF_HA_PROFILE_ID;
         req.direction = ESP_ZB_ZCL_CMD_DIRECTION_TO_SRV;
-        req.custom_cmd_id = ATTR_ACTION_ID;
+        req.custom_cmd_id = ZIGBEE_ATTR_ACTION_ID;
 
         req.data.type = ESP_ZB_ZCL_ATTR_TYPE_SET;
         req.data.size = sizeof(payload);
