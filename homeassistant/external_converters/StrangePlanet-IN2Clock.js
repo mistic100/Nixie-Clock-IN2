@@ -124,7 +124,7 @@ export default {
     ],
     exposes: [
         e.action([
-          'click_1', 'click_2',, 'click_3',
+          'click_1', 'click_2', 'click_3',
           'long_click_1', 'long_click_2', 'long_click_3',
           'double_click_1', 'double_click_2', 'double_click_3',
         ]),

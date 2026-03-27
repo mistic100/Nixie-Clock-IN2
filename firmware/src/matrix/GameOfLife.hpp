@@ -6,6 +6,9 @@
 
 struct GameOfLifeImpl
 {
+    u32_t _hash1 = 0;
+    u32_t _hash2 = 0;
+
     void init(Adafruit_IS31FL3731_With_Brightness *matrix)
     {
         auto current = matrix->_buffer;
@@ -17,6 +20,9 @@ struct GameOfLifeImpl
                 current[x][y] = random(2);
             }
         }
+        
+        _hash1 = 0;
+        _hash2 = 0;
     }
 
     void loop(Adafruit_IS31FL3731_With_Brightness *matrix)
@@ -25,7 +31,7 @@ struct GameOfLifeImpl
         {
             auto current = matrix->_buffer;
             auto next = matrix->_buffer2;
-            bool isStatic = true;
+            u32_t hash = 0;
 
             // compute next generation
             for (u8_t x = 0; x < SCREEN_WIDTH; x++)
@@ -43,20 +49,26 @@ struct GameOfLifeImpl
                         next[x][y] = (neighbors == 3) ? 1 : 0;
                     }
 
-                    if (current[x][y] != next[x][y])
+                    // hash: XOR position-dependent primes for alive cells
+                    if (next[x][y])
                     {
-                        isStatic = false;
+                        hash ^= (u32_t)(x + 1) * 0x1f1f1f1f;
+                        hash ^= (u32_t)(y + 1) * 0x3f3f3f3f;
+                        hash = (hash << 1) | (hash >> 31); // Rotate
                     }
                 }
             }
 
             // reset if stale
-            if (isStatic)
+            if (hash == _hash1 || hash == _hash2)
             {
                 init(matrix);
             }
             else
             {
+                _hash2 = _hash1;
+                _hash1 = hash;
+
                 matrix->beginFrame();
 
                 for (u8_t x = 0; x < SCREEN_WIDTH; x++)
