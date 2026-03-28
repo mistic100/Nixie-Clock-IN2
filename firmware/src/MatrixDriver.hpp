@@ -100,11 +100,6 @@ public:
         }
     }
 
-    const matrix_mode_t mode() const
-    {
-        return _mode;
-    }
-
     void setState(bool state)
     {
         _state = state;
@@ -126,7 +121,7 @@ public:
     void setTemp(float temp)
     {
         _temp.temperature = temp;
-        if (_mode == TEMPERATURE)
+        if (_state && _mode == TEMPERATURE)
         {
             _temp.init(&_matrix);
         }
@@ -134,11 +129,11 @@ public:
 
     void updateTime()
     {
-        if (_mode == DATE)
+        if (_state && _mode == DATE)
         {
             _date.init(timeKeeper.getTime());
         }
-        else if (_mode == SANDFALL)
+        else if (_state && _mode == SANDFALL)
         {
             _sandfall.init(&_matrix);
         }
@@ -147,7 +142,7 @@ public:
     void setWeather(u8_t weatherCode)
     {
         _weather.code = weatherCode;
-        if (_mode == WEATHER)
+        if (_state && _mode == WEATHER)
         {
             _weather.init(&_matrix);
         }
