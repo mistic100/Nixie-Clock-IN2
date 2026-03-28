@@ -7,6 +7,10 @@ Check out my other projects:
 
 This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites/nixie/data/I/IN-2/in-2.htm) and a 16x9 LED matrix. It was mostly inspired by this 3D model [80s Alarm Clock by Tom Seddon](https://sketchfab.com/3d-models/80s-alarm-clock-36aaecc458bc4e3ea907cdb9d538c9f1).
 
+![](https://photos.strangeplanet.fr/_data/i/upload/2026/03/28/20260328153249-c8457e5f-me.jpg)
+
+[More photos](https://photos.strangeplanet.fr/index.php?/category/268-horloge_nixie_in_2_mars_2026)
+
 ### Key features
 
 - 3 buttons and 1 rotary encoder
@@ -22,7 +26,6 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
   - falling sand animation
   - Game of Life animation
   - fire animation
-  - Matrix animation
   - rain animation
 - possibility to use a DS3231 RTC module (routed on the PCB but not available in current firmware)
   
@@ -42,3 +45,8 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
 - MPSA42 high voltage NPN transistor
 - USB-C connector
 - resistors, capacitors, diodes...
+
+
+## License
+
+The Arduino code, the KiCad design and SolidWorks files are distributed under the Creative Commons 3.0 BY-SA license.
