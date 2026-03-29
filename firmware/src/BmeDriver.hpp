@@ -28,7 +28,7 @@ public:
             delay(1000);
         }
 
-        auto offset = settings.tempOffset();
+        auto offset = settings.getTempOffset();
         _bme280.setTemperatureCompensation(offset);
     }
 
@@ -52,7 +52,7 @@ public:
         _bme280.setTemperatureCompensation(offset);
         update();
 
-        settings.saveTempOffset(offset);
+        settings.setTempOffset(offset);
     }
 
 private:

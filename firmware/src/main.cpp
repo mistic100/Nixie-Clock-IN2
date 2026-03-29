@@ -114,7 +114,8 @@ void setup()
         ESP_LOGI(TAG_MAIN, "Main state %d", state);
         leds.setState(state);
         matrix.setState(state);
-        nixieDriver.setState(state); });
+        nixieDriver.setState(state);
+        settings.setState(state); });
 
     zigbeeCtrl.onLedColorChange([](bool state, uint8_t hue, uint8_t saturation, uint8_t value)
                                 {
@@ -139,9 +140,9 @@ void setup()
     Wire.begin(SDA1, SCL1);
     matrix.begin();
     bme.begin();
-    zigbeeCtrl.begin();
     leds.begin();
     nixieDriver.begin();
+    zigbeeCtrl.begin();
 
     delay(2000);
 

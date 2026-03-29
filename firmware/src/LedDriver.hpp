@@ -16,17 +16,14 @@ private:
     bool _need_save = false;
 
 public:
-    void begin()
-    {
-        _color = settings.ledColor();
-    }
+    void begin() {}
 
     void loop()
     {
         if (_changed)
         {
             _changed = false;
-            applyColor();   
+            applyColor();
         }
 
         EVERY_N_SECONDS(30)
@@ -34,7 +31,7 @@ public:
             if (_need_save)
             {
                 _need_save = false;
-                settings.saveLedColor(_color);
+                settings.setLedColor(_color);
             }
         }
     }
@@ -47,12 +44,11 @@ public:
 
     void setColor(u8_t hue, u8_t sat, u8_t val)
     {
-        _need_save = _need_save || _color.h != hue || _color.s != sat || _color.v != val;
-
         _color.h = hue;
         _color.s = sat;
         _color.v = val;
         _changed = true;
+        _need_save = true;
     }
 
 private:
@@ -67,7 +63,7 @@ private:
             for (u8_t i = 0; i < NUM_LEDS; i++)
             {
                 rgbLedWriteOrdered(LEDS_PIN, LEDS_ORDER, color.r, color.g, color.b);
-            } 
+            }
         }
         else
         {
@@ -75,7 +71,7 @@ private:
             for (u8_t i = 0; i < NUM_LEDS; i++)
             {
                 rgbLedWriteOrdered(LEDS_PIN, LEDS_ORDER, 0, 0, 0);
-            } 
+            }
         }
     }
 };

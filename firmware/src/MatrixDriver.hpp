@@ -35,6 +35,7 @@ private:
 
     volatile matrix_mode_t _mode = (matrix_mode_t) 0;
     volatile bool _mode_changed = false;
+    volatile bool _need_save = false;
 
     DateImpl _date;
     FireImpl _fire;
@@ -49,7 +50,7 @@ public:
     {
         _matrix.begin();
 
-        applyMode();
+        setMode((matrix_mode_t) settings.getMode());
     }
 
     void loop()
@@ -57,6 +58,7 @@ public:
         if (_state_changed)
         {
             _state_changed = false;
+            _mode_changed = _state;
 
             if (!_state)
             {
@@ -71,7 +73,6 @@ public:
 
         if (_mode_changed)
         {
-            ESP_LOGI(TAG_MATRIX, "Mode: %d", _mode);
             _mode_changed = false;
             applyMode();
         }
@@ -98,24 +99,21 @@ public:
             _sandfall.loop(&_matrix);
             break;
         }
+
+        EVERY_N_SECONDS(30)
+        {
+            if (_need_save)
+            {
+                _need_save = false;
+                settings.setMode((u8_t) _mode);
+            }
+        }
     }
 
     void setState(bool state)
     {
         _state = state;
         _state_changed = true;
-
-        if (state)
-        {
-            _mode_changed = true;
-        }
-        else
-        {
-            if (_mode >= MATRIX_MODE_COUNT)
-            {
-                setMode((matrix_mode_t) 0);
-            }
-        }
     }
 
     void setTemp(float temp)
@@ -146,12 +144,6 @@ public:
         {
             _weather.init(&_matrix);
         }
-    }
-
-    void setMode(matrix_mode_t mode)
-    {
-        _mode = mode;
-        _mode_changed = true;
     }
 
     void nextMode()
@@ -189,8 +181,17 @@ public:
     }
 
 private:
+    void setMode(matrix_mode_t mode)
+    {
+        _mode = mode;
+        _mode_changed = true;
+        _need_save = true;
+    }
+
     void applyMode()
     {
+        ESP_LOGI(TAG_MATRIX, "Mode: %d", _mode);
+
         switch (_mode)
         {
         case DATE:

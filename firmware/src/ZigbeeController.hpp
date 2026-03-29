@@ -61,15 +61,15 @@ public:
 
         ESP_LOGI(TAG_ZB, "Ready");
 
-        _mainSwitch.setLight(true);
+        _mainSwitch.setLight(settings.getState());
 
         _tempSensor.setReporting(1, 0, 0.1);
         _tempSensor.setHumidityReporting(1, 0, 0.1);
 
         _leds.setLightState(true);
-        _leds.setLightColor(settings.ledColor());
+        _leds.setLightColor(settings.getLedColor());
 
-        _customEp.setTempOffset(settings.tempOffset() * 100);
+        _customEp.setTempOffset(settings.getTempOffset() * 100);
     }
 
     void toggleMainSwitch()
