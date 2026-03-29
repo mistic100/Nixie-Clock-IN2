@@ -47,6 +47,20 @@ This is a Nixie Clock using small [IN-2 tubes](https://www.tube-tester.com/sites
 - resistors, capacitors, diodes...
 
 
+### Schematics
+
+![](./images/main-board-sch.svg)
+
+### PCB
+
+![](./images/main-board-pcb.svg)
+
+![](./images/main-board-render1.png)
+
+### Case
+
+![](./images/case1.png)
+
 ## License
 
 The Arduino code, the KiCad design and SolidWorks files are distributed under the Creative Commons 3.0 BY-SA license.
