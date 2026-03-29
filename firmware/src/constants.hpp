@@ -26,6 +26,9 @@
 #define DOTS 3
 
 #define ANTI_POISONING_INTERVAL_S 20 * 60
+#define ANTI_POISONING_CYCLES 100
+
+#define TEMP_DISPLAY_DURATION_S 30
 
 // buttons configuration
 #define ENCODER_A 9

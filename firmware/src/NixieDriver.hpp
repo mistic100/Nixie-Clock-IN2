@@ -11,10 +11,11 @@ class NixieDriver
 {
 private:
     byte _data[32];
-    bool _state = true;
+    volatile bool _state = true;
+    volatile bool _changed = false;
     bool _dots = false;
-    bool _changed = false;
-    s8_t _antipoisoning_timer = -1;
+    u8_t _antipoisoning_timer = 0;
+    volatile u8_t _temp_display_timer = 0;
 
 public:
     void begin()
@@ -39,26 +40,35 @@ public:
                 _dots = !_dots;
                 digitalWrite(DOTS, _dots);
             }
+            if (_temp_display_timer)
+            {
+                _temp_display_timer = _temp_display_timer - 1;
+                if (!_temp_display_timer)
+                {
+                    ESP_LOGI(TAG_NIXIE, "Temp display end");
+                    setState(false);
+                }
+            }
         }
 
         EVERY_N_SECONDS(ANTI_POISONING_INTERVAL_S)
         {
-            if (_state)
+            if (_state && !_temp_display_timer)
             {
                 ESP_LOGI(TAG_NIXIE, "Start anti poisoning");
-                _antipoisoning_timer = 0;
+                _antipoisoning_timer = ANTI_POISONING_CYCLES;
             }
         }
 
         EVERY_N_MILLIS(10)
         {
-            if (_antipoisoning_timer >= 0)
+            if (_antipoisoning_timer)
             {
                 runAntipoisoning();
             }
         }
 
-        if (_changed && _antipoisoning_timer == -1)
+        if (_changed && !_antipoisoning_timer)
         {
             _changed = false;
             
@@ -86,6 +96,7 @@ public:
     {
         _state = state;
         _changed = true;
+        _temp_display_timer = 0;
     }
 
     void update()
@@ -93,6 +104,17 @@ public:
         if (_state)
         {
             _changed = true;
+        }
+    }
+
+    void setTempDisplay()
+    {
+        if (!_state)
+        {
+            ESP_LOGI(TAG_NIXIE, "Start temp display for %ds", TEMP_DISPLAY_DURATION_S);
+            _state = true;
+            _changed = true;
+            _temp_display_timer = TEMP_DISPLAY_DURATION_S;
         }
     }
 
@@ -121,10 +143,10 @@ private:
         // loop each digit 0 to 9
         showDigits(_antipoisoning_timer % 10, _antipoisoning_timer % 10, _antipoisoning_timer % 10, _antipoisoning_timer % 10);
 
-        _antipoisoning_timer++;
-        if (_antipoisoning_timer >= 100)
+        _antipoisoning_timer--;
+        if (!_antipoisoning_timer)
         {
-            _antipoisoning_timer = -1;
+            ESP_LOGI(TAG_NIXIE, "Anti poisoning end");
             _changed = true;
         }
     }

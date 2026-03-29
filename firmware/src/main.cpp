@@ -52,11 +52,13 @@ void setup()
     encoder.onUp([]()
                  { 
         ESP_LOGI(TAG_MAIN, "Encoder up");
+        nixieDriver.setTempDisplay();
         matrix.nextMode(); });
 
     encoder.onDown([]()
                    { 
         ESP_LOGI(TAG_MAIN, "Encoder down");
+        nixieDriver.setTempDisplay();
         matrix.prevMode(); });
 
     encoderButton.setClickHandler([](Button2 &btn)
@@ -118,8 +120,7 @@ void setup()
         settings.setState(state); });
 
     zigbeeCtrl.onLedColorChange([](bool state, uint8_t hue, uint8_t saturation, uint8_t value)
-                                {
-        leds.setColor(hue, saturation, value); });
+                                { leds.setColor(hue, saturation, value); });
 
     zigbeeCtrl.onWeather([](u8_t weatherCode)
                          { matrix.setWeather(weatherCode); });
