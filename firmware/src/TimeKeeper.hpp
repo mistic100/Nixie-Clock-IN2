@@ -32,8 +32,6 @@ public:
             return;
         }
 
-        timeinfo.tm_year += 30; // Zigbee returns a timestamp relative to 2000/01/01
-
         time_t now = mktime(&timeinfo);
         struct timeval tv = {.tv_sec = now, .tv_usec = 0};
         settimeofday(&tv, NULL);
