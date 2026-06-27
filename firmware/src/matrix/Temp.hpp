@@ -6,21 +6,31 @@
 
 struct TempImpl
 {
-    float temperature = 0;
+    float _temperature = 0;
 
-    void init(Adafruit_IS31FL3731_With_Brightness *matrix)
+    void init(float temperature)
     {
-        matrix->clear();
+        _temperature = temperature;
+    }
 
-        char tens = (int)(temperature / 10) % 10 + '0';
-        matrix->drawChar(tens, 0, 6);
+    void loop(Adafruit_IS31FL3731_With_Brightness *matrix)
+    {
+        EVERY_N_SECONDS(1)
+        {
+            matrix->beginFrame();
 
-        char ones = (int)temperature % 10 + '0';
-        matrix->drawChar(ones, 5, 6);
+            char tens = (int)(_temperature / 10) % 10 + '0';
+            matrix->drawChar(tens, 0, 6);
 
-        matrix->drawPixel(10, 6);
+            char ones = (int)_temperature % 10 + '0';
+            matrix->drawChar(ones, 5, 6);
 
-        char decimal = (int)(temperature * 10) % 10 + '0';
-        matrix->drawChar(decimal, 12, 6);
+            matrix->drawPixel(10, 6);
+
+            char decimal = (int)(_temperature * 10) % 10 + '0';
+            matrix->drawChar(decimal, 12, 6);
+
+            matrix->showFrame();
+        }
     }
 };

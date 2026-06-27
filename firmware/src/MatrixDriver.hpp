@@ -83,6 +83,14 @@ public:
             _date.loop(&_matrix);
             break;
 
+        case TEMPERATURE:
+            _temp.loop(&_matrix);
+            break;
+
+        case WEATHER:
+            _weather.loop(&_matrix);
+            break;
+
         case GAME_OF_LIFE:
             _gameoflife.loop(&_matrix);
             break;
@@ -118,11 +126,7 @@ public:
 
     void setTemp(float temp)
     {
-        _temp.temperature = temp;
-        if (_state && _mode == TEMPERATURE)
-        {
-            _temp.init(&_matrix);
-        }
+        _temp.init(temp);
     }
 
     void updateTime()
@@ -139,11 +143,7 @@ public:
 
     void setWeather(u8_t weatherCode)
     {
-        _weather.code = weatherCode;
-        if (_state && _mode == WEATHER)
-        {
-            _weather.init(&_matrix);
-        }
+        _weather.init(weatherCode);
     }
 
     void nextMode()
@@ -196,14 +196,6 @@ private:
         {
         case DATE:
             _date.init(timeKeeper.getTime());
-            break;
-
-        case TEMPERATURE:
-            _temp.init(&_matrix);
-            break;
-
-        case WEATHER:
-            _weather.init(&_matrix);
             break;
 
         case GAME_OF_LIFE:

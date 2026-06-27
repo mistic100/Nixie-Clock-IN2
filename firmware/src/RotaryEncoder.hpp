@@ -14,7 +14,7 @@ const s8_t _KNOBDIR[16] = {
 class RotaryHandler
 {
 private:
-    int _clk, _dt, _stepsPerClick;
+    const int _clk, _dt, _stepsPerClick;
     volatile int _counter = 0;
     volatile int _accumulator = 0;
     volatile u8_t _state = 0;

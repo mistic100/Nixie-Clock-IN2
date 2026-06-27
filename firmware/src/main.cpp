@@ -162,6 +162,7 @@ void loop()
     button3.loop();
 
     timeKeeper.loop();
+    zigbeeCtrl.loop();
     bme.loop();
     matrix.loop();
     leds.loop();

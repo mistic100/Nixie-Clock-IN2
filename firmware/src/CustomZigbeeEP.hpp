@@ -16,6 +16,12 @@ private:
     void (*_on_weather)(u8_t);
     void (*_on_temp_offset)(int16_t);
 
+    volatile bool _weather_code_changed = false;
+    volatile u8_t _weather_code = 0;
+
+    volatile bool _temp_offset_changed = false;
+    volatile int16_t _temp_offset = 0;
+
 public:
     CustomZigbeeEP(u8_t endpoint) : ZigbeeEP(endpoint)
     {
@@ -44,6 +50,21 @@ public:
 
     void onTempOffset(void (*callback)(int16_t)) { _on_temp_offset = callback; }
 
+    void loop()
+    {
+        if (_weather_code_changed)
+        {
+            _weather_code_changed = false;
+            _on_weather(_weather_code);
+        }
+
+        if (_temp_offset_changed)
+        {
+            _temp_offset_changed = false;
+            _on_temp_offset(_temp_offset);
+        }
+    }
+
     bool setTempOffset(uint16_t offset)
     {
         esp_zb_zcl_status_t ret = ESP_ZB_ZCL_STATUS_SUCCESS;
@@ -69,13 +90,15 @@ public:
             {
                 u8_t weather = *(u8_t *)msg->attribute.data.value;
                 ESP_LOGI(TAG_ZB_CUSTOM, "Received weather code %d", weather);
-                _on_weather(weather);
+                _weather_code = weather;
+                _weather_code_changed = true;
             }
             else if (msg->attribute.id == ZIGBEE_ATTR_TEMP_OFFSET)
             {
                 int16_t offset = *(int16_t *)msg->attribute.data.value;
                 ESP_LOGI(TAG_ZB_CUSTOM, "Received temp offset %d", offset);
-                _on_temp_offset(offset);
+                _temp_offset = offset;
+                _temp_offset_changed = true;
             }
             else
             {

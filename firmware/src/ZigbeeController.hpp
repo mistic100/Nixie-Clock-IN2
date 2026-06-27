@@ -72,6 +72,11 @@ public:
         _customEp.setTempOffset(settings.getTempOffset() * 100);
     }
 
+    void loop()
+    {
+        _customEp.loop();
+    }
+
     void toggleMainSwitch()
     {
         _mainSwitch.setLight(!_mainSwitch.getLightState());
@@ -112,7 +117,6 @@ public:
     {
         ESP_LOGI(TAG_ZB, "Request time");
         tm timeinfo = _mainSwitch.getTime();
-        timeinfo.tm_year += 30; // Zigbee returns a timestamp relative to 2000/01/01
         timeKeeper.setTime(timeinfo);
     }
 };

@@ -19,7 +19,7 @@ public:
 
     void begin()
     {
-        while (!_matrix.begin())
+        while (!_matrix.begin(ISSI_ADDR_DEFAULT))
         {
             ESP_LOGE(TAG_MATRIX, "Could not find IS31");
             delay(1000);

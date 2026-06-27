@@ -11,7 +11,7 @@ class NixieDriver
 {
 private:
     byte _data[32];
-    volatile bool _state = true;
+    bool _state = true;
     volatile bool _changed = false;
     bool _dots = false;
     u8_t _antipoisoning_timer = 0;
@@ -35,7 +35,7 @@ public:
     {
         EVERY_N_SECONDS(1)
         {
-            if (_state)
+            if (_state || _temp_display_timer)
             {
                 _dots = !_dots;
                 digitalWrite(DOTS, _dots);
@@ -72,7 +72,7 @@ public:
         {
             _changed = false;
             
-            if (_state)
+            if (_state || _temp_display_timer)
             {
                 auto timeinfo = timeKeeper.getTime();
 
@@ -95,8 +95,8 @@ public:
     void setState(bool state)
     {
         _state = state;
-        _changed = true;
         _temp_display_timer = 0;
+        _changed = true;
     }
 
     void update()
@@ -112,9 +112,8 @@ public:
         if (!_state)
         {
             ESP_LOGI(TAG_NIXIE, "Start temp display for %ds", TEMP_DISPLAY_DURATION_S);
-            _state = true;
-            _changed = true;
             _temp_display_timer = TEMP_DISPLAY_DURATION_S;
+            _changed = true;
         }
     }
 

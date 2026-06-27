@@ -4,6 +4,18 @@
 
 #define TAG_TIME "TIME"
 
+bool is_tm_zero(const struct tm *t) {
+    return (t->tm_sec   == 0 &&
+            t->tm_min   == 0 &&
+            t->tm_hour  == 0 &&
+            t->tm_mday  == 0 &&
+            t->tm_mon   == 0 &&
+            t->tm_year  == 0 &&
+            t->tm_wday  == 0 &&
+            t->tm_yday  == 0 &&
+            t->tm_isdst == 0);
+}
+
 class TimeKeeper
 {
 private:
@@ -14,6 +26,14 @@ private:
 public:
     void setTime(tm &timeinfo)
     {
+        if (is_tm_zero(&timeinfo))
+        {
+            ESP_LOGW(TAG_TIME, "Ignored invalid timeinfo");
+            return;
+        }
+
+        timeinfo.tm_year += 30; // Zigbee returns a timestamp relative to 2000/01/01
+
         time_t now = mktime(&timeinfo);
         struct timeval tv = {.tv_sec = now, .tv_usec = 0};
         settimeofday(&tv, NULL);
